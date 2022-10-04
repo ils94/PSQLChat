@@ -2,7 +2,7 @@
 
 A simple chat where anyone can setup a PostgreSQL Database to store messages.
 
-# How to setup the database strucutre
+# How to setup the database structure
 
 create a table with this command:
 
