@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/pauseResumeChatLoop"
+        android:icon="@drawable/pause"
+        android:title="Pause/Resume Auto Scroll"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/login"
+        android:title="Login" />
+
+    <item
+        android:id="@+id/shareLink"
+        android:title="Share DB Link" />
+
+    <item
+        android:id="@+id/changeTextSize"
+        android:title="Change Text Size" />
+
+    <item
+        android:id="@+id/showAllMessages"
+        android:title="Show All Messages" />
+</menu>
