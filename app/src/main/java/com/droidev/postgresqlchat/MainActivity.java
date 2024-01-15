@@ -90,11 +90,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        send.setOnClickListener(v -> {
-
-            sendText();
-
-        });
+        send.setOnClickListener(v -> sendText());
 
         send.setEnabled(false);
 

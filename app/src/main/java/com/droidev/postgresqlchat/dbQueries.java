@@ -6,8 +6,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -87,7 +85,7 @@ public class dbQueries {
         }).start();
     }
 
-    public void searchMessage(Activity activity, TextView textView, String string) throws SQLException {
+    public void searchMessage(Activity activity, TextView textView, String string) {
 
         new Thread(() -> {
             Connection connection = null;
@@ -120,9 +118,7 @@ public class dbQueries {
                 rs.close();
                 pst.close();
 
-                activity.runOnUiThread(() -> {
-                    textView.setText(chatBuilder.toString());
-                });
+                activity.runOnUiThread(() -> textView.setText(chatBuilder.toString()));
             } catch (SQLException e) {
                 activity.runOnUiThread(() ->
                         Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());

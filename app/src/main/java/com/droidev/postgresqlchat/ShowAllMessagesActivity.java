@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.method.ScrollingMovementMethod;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,9 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class ShowAllMessagesActivity extends AppCompatActivity {
 
@@ -65,14 +61,9 @@ public class ShowAllMessagesActivity extends AppCompatActivity {
 
             positiveButton.setOnClickListener(v -> {
 
-                try {
+                dbQueries db = new dbQueries();
 
-                    dbQueries db = new dbQueries();
-
-                    db.searchMessage(ShowAllMessagesActivity.this, chat, search.getText().toString());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                db.searchMessage(ShowAllMessagesActivity.this, chat, search.getText().toString());
 
                 dialog.dismiss();
             });
