@@ -505,10 +505,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void restartBackgroundService() {
-        // Stop the existing service
         stopBackgroundService();
 
-        // Start a new instance of the service
         startBackgroundService();
     }
 

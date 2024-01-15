@@ -199,7 +199,6 @@ public class dbQueries {
                     chatBuilder.append(ID).append("@").append(user_name).append(": ").append(user_message);
                 }
 
-                // Call the callback with the chatBuilder content
                 callback.onChatLoaded(chatBuilder.toString());
 
             } catch (SQLException e) {
