@@ -2,6 +2,7 @@ package com.droidev.postgresqlchat;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +16,7 @@ import java.sql.Statement;
 
 public class dbQueries {
 
-    public Connection connectDB(Context context) throws SQLException {
+    public Connection connectDB(Context context) {
 
         TinyDB tinyDB = new TinyDB(context);
 
@@ -31,7 +32,11 @@ public class dbQueries {
 
         if (!dbName.isEmpty()) {
 
-            connection = DriverManager.getConnection(url, dbUser, dbPass);
+            try {
+                connection = DriverManager.getConnection(url, dbUser, dbPass);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return connection;
@@ -170,4 +175,43 @@ public class dbQueries {
             }
         }).start();
     }
+
+    public interface ChatCallback {
+        void onChatLoaded(String chat);
+    }
+
+    public void loadLastMsg(Context context, ChatCallback callback) {
+        new Thread(() -> {
+            Connection connection;
+
+            connection = connectDB(context);
+
+            try (Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT * FROM CHAT ORDER BY ID DESC LIMIT 1")) {
+
+                StringBuilder chatBuilder = new StringBuilder();
+
+                while (rs.next()) {
+                    int ID = rs.getInt("ID");
+                    String user_name = rs.getString("USER_NAME");
+                    String user_message = rs.getString("USER_MESSAGE");
+
+                    chatBuilder.append(ID).append("@").append(user_name).append(": ").append(user_message);
+                }
+
+                // Call the callback with the chatBuilder content
+                callback.onChatLoaded(chatBuilder.toString());
+
+            } catch (SQLException e) {
+                Log.e("Error", "Exception in loadLastMsg", e);
+            } finally {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    Log.e("Error", "Error closing connection", e);
+                }
+            }
+        }).start();
+    }
+
 }

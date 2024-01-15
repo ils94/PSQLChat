@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -98,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
 
             chat.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(tinyDB.getString("textSize")));
         }
+
+        startUp();
     }
 
     @Override
@@ -307,9 +310,7 @@ public class MainActivity extends AppCompatActivity {
                 tinyDB.putString("dbHost", dbHost.getText().toString());
                 tinyDB.putString("dbPort", dbPort.getText().toString());
 
-                loadChat();
-
-                loadChatHandlerLoop();
+                startUp();
 
                 dialog.dismiss();
 
@@ -423,7 +424,7 @@ public class MainActivity extends AppCompatActivity {
                 tinyDB.putString("dbHost", linkArray[3]);
                 tinyDB.putString("dbPort", linkArray[4]);
 
-                loadChatHandlerLoop();
+                startUp();
 
                 dialog.dismiss();
 
@@ -467,6 +468,41 @@ public class MainActivity extends AppCompatActivity {
             autoScroll = true;
 
             menuItem.findItem(R.id.pauseResumeChatLoop).setIcon(R.drawable.pause);
+        }
+
+    }
+
+    private void startBackgroundService() {
+        Intent serviceIntent = new Intent(this, MyBackgroundService.class);
+
+        // Starting service with startForegroundService for Android Oreo and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent);
+        } else {
+            startService(serviceIntent);
+        }
+    }
+
+    private void stopBackgroundService() {
+        Intent serviceIntent = new Intent(this, MyBackgroundService.class);
+        stopService(serviceIntent);
+    }
+
+    public void restartBackgroundService() {
+        // Stop the existing service
+        stopBackgroundService();
+
+        // Start a new instance of the service
+        startBackgroundService();
+    }
+
+    public void startUp() {
+
+        if (!tinyDB.getString("dbName").isEmpty()) {
+
+            loadChat();
+            restartBackgroundService();
+            loadChatHandlerLoop();
         }
 
     }
