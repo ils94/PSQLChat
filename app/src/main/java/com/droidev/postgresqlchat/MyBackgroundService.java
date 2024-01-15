@@ -14,13 +14,15 @@ import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MyBackgroundService extends Service {
 
     private static final int NOTIFICATION_ID = 1;
-    private static final String CHANNEL_ID = "PSQLChat New MSG";
+    private static final String CHANNEL_ID = "PSQLChat Notifications";
 
     private Handler handler;
     private Runnable runnable;
@@ -61,19 +63,40 @@ public class MyBackgroundService extends Service {
     private void performRepeatedTask(Context context) {
         dbQueries db = new dbQueries();
 
-        db.loadLastMsg(context, chat -> {
-            TinyDB tinyDB = new TinyDB(context);
+        MyApplication myApplication = (MyApplication) context.getApplicationContext();
 
-            List<String> chatList = Arrays.asList(chat.split("@"));
+        if (!myApplication.isAppInForeground()) {
 
-            if (!tinyDB.getString("lastMSG").equals(chatList.get(0))) {
+            db.loadLastMsg(context, chat -> {
+                TinyDB tinyDB = new TinyDB(context);
 
-                showNotification(context, chatList.get(1));
+                ArrayList<String> chatArrayList = tinyDB.getListString("receivedMSGs");
 
-                tinyDB.putString("lastMSG", chatList.get(0));
-            }
-        });
+                List<String> chatList = Arrays.asList(chat.split("@"));
+
+                if (!tinyDB.getString("lastMSG").equals(chatList.get(0))) {
+                    chatArrayList.add(chatList.get(1));
+
+                    int maxSize = Math.min(chatArrayList.size(), 5);
+                    List<String> last5Messages = new ArrayList<>(chatArrayList.subList(chatArrayList.size() - maxSize, chatArrayList.size()));
+
+                    Collections.reverse(last5Messages);
+
+                    tinyDB.putListString("receivedMSGs", chatArrayList);
+
+                    StringBuilder messageBuilder = new StringBuilder();
+                    for (String message : last5Messages) {
+                        messageBuilder.append(message).append("\n");
+                    }
+
+                    showNotification(context, messageBuilder.toString());
+
+                    tinyDB.putString("lastMSG", chatList.get(0));
+                }
+            });
+        }
     }
+
 
     private void showNotification(Context context, String content) {
         MyApplication myApplication = (MyApplication) context.getApplicationContext();
@@ -85,22 +108,27 @@ public class MyBackgroundService extends Service {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("New Message")
+                    .setContentTitle("New Message(s)")
                     .setContentText(content)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true);
+
+            NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+            bigTextStyle.bigText(content);
+            builder.setStyle(bigTextStyle);
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(NOTIFICATION_ID, builder.build());
         }
     }
 
+
     private Notification createNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    "PSQLChat New MSG",
+                    "PSQLChat Notifications",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
@@ -113,6 +141,3 @@ public class MyBackgroundService extends Service {
         return builder.build();
     }
 }
-
-
-

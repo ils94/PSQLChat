@@ -516,6 +516,7 @@ public class MainActivity extends AppCompatActivity {
 
             loadChat();
             loadChatHandlerLoop();
+            tinyDB.remove("receivedMSGs");
         }
 
     }
