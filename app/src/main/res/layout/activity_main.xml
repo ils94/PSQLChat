@@ -8,14 +8,21 @@
     android:padding="5dp"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/chat"
+    <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:autoLink="all"
-        android:gravity="bottom"
-        android:padding="5dp" />
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/chat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autoLink="all"
+            android:gravity="bottom"
+            android:padding="5dp" />
+
+    </ScrollView>
 
     <View
         android:layout_width="match_parent"

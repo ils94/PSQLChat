@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,24 +18,25 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView chat;
     private EditText textToSend;
     private Button send;
+    private ScrollView scrollView;
+
     private Boolean confirm = false, autoScroll = true;
+
+    private Handler handler;
+    private final int delay = 5000;
+
     Menu menuItem;
 
     private TinyDB tinyDB;
-
-    public static Connection connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         chat = findViewById(R.id.chat);
         textToSend = findViewById(R.id.textToSend);
         send = findViewById(R.id.send);
+        scrollView = findViewById(R.id.scrollview);
 
         textToSend.addTextChangedListener(new TextWatcher() {
             @Override
@@ -79,7 +80,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (actionId == EditorInfo.IME_ACTION_SEND) {
 
+
                 sendText();
+
 
                 return true;
             }
@@ -87,9 +90,11 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        chat.setMovementMethod(new ScrollingMovementMethod());
+        send.setOnClickListener(v -> {
 
-        send.setOnClickListener(v -> sendText());
+            sendText();
+
+        });
 
         send.setEnabled(false);
 
@@ -97,10 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
             chat.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(tinyDB.getString("textSize")));
         }
-
-        makeConnection();
-
-        loadChatHandlerLoop();
     }
 
     @Override
@@ -179,76 +180,23 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void makeConnection() {
-
-        new Thread(() -> {
-            try {
-
-                String dbHost = tinyDB.getString("dbHost");
-                String dbPort = tinyDB.getString("dbPort");
-                String dbName = tinyDB.getString("dbName");
-                String dbUser = tinyDB.getString("dbUser");
-                String dbPass = tinyDB.getString("dbPass");
-
-                String url = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
-
-                if (!dbName.isEmpty()) {
-
-                    connection = DriverManager.getConnection(url, dbUser, dbPass);
-                }
-
-            } catch (SQLException e) {
-                runOnUiThread(() -> Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_SHORT).show());
-            }
-        }).start();
-    }
-
     private void loadChat() {
 
-        try {
+        dbQueries db = new dbQueries();
 
-            if (connection.isClosed() || connection == null) {
-
-                makeConnection();
-
-            } else {
-
-                dbQueries db = new dbQueries();
-
-                StringBuilder dbLoad = db.loadChat(MainActivity.this, connection, "SELECT * FROM CHAT ORDER BY ID ASC LIMIT 1000");
-
-                chat.setText(dbLoad);
-
-                if (autoScroll) {
-
-                    chat.append(" ");
-                }
-            }
-        } catch (Exception e) {
-
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-        }
+        db.loadChat(MainActivity.this, chat, scrollView, autoScroll);
     }
 
     private void loadChatHandlerLoop() {
-
-        final Handler handler = new Handler();
-        final int delay = 3000;
+        if (handler == null) {
+            handler = new Handler();
+        } else {
+            handler.removeCallbacksAndMessages(null);
+        }
 
         handler.postDelayed(new Runnable() {
             public void run() {
-
-                if (!(connection == null)) {
-
-                    try {
-                        if (!connection.isClosed() && autoScroll) {
-
-                            loadChat();
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
+                loadChat();
                 handler.postDelayed(this, delay);
             }
         }, delay);
@@ -260,13 +208,11 @@ public class MainActivity extends AppCompatActivity {
 
             dbQueries db = new dbQueries();
 
-            db.insertIntoChat(MainActivity.this, connection, tinyDB.getString("user"), textToSend.getText().toString());
+            db.insertIntoChat(MainActivity.this, tinyDB.getString("user"), textToSend.getText().toString());
 
             textToSend.setText("");
 
             resumeChatLoop();
-
-            chat.append(" ");
 
             send.setEnabled(false);
 
@@ -365,24 +311,13 @@ public class MainActivity extends AppCompatActivity {
                 tinyDB.putString("dbHost", dbHost.getText().toString());
                 tinyDB.putString("dbPort", dbPort.getText().toString());
 
+                loadChat();
+
+                loadChatHandlerLoop();
+
                 dialog.dismiss();
 
                 Toast.makeText(MainActivity.this, "Saved.", Toast.LENGTH_SHORT).show();
-
-                new Thread(() -> {
-
-                    try {
-
-                        if (!(connection == null)) {
-
-                            connection.close();
-                        }
-
-                        makeConnection();
-                    } catch (SQLException e) {
-                        runOnUiThread(() -> Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_SHORT).show());
-                    }
-                }).start();
             }
         });
 
@@ -492,65 +427,20 @@ public class MainActivity extends AppCompatActivity {
                 tinyDB.putString("dbHost", linkArray[3]);
                 tinyDB.putString("dbPort", linkArray[4]);
 
+                loadChatHandlerLoop();
+
                 dialog.dismiss();
 
                 Toast.makeText(MainActivity.this, "Saved.", Toast.LENGTH_SHORT).show();
 
-                new Thread(() -> {
-
-                    try {
-
-                        if (!(connection == null)) {
-
-                            connection.close();
-                        }
-
-                        makeConnection();
-                    } catch (SQLException e) {
-                        runOnUiThread(() -> Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_SHORT).show());
-                    }
-                }).start();
             }
         });
     }
 
     private void showAllMessages() {
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setTitle("Show All Messages")
-                .setMessage("You are about to load all messages from the database, proceed?")
-                .setPositiveButton("Yes", null)
-                .setNegativeButton("Cancel", null)
-                .show();
-
-        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-
-        positiveButton.setOnClickListener(v -> {
-
-            try {
-
-                if (connection.isClosed() || connection == null) {
-
-                    makeConnection();
-
-                } else {
-
-                    dbQueries db = new dbQueries();
-
-                    StringBuilder dbLoad = db.loadChat(MainActivity.this, connection, "SELECT * FROM CHAT ORDER BY ID ASC");
-
-                    Intent intent = new Intent(this, ShowAllMessagesActivity.class);
-                    intent.putExtra("chat", dbLoad.toString());
-                    startActivity(intent);
-                }
-            } catch (Exception e) {
-
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-
-            dialog.dismiss();
-        });
+        Intent intent = new Intent(this, ShowAllMessagesActivity.class);
+        startActivity(intent);
     }
 
     private void pauseResumeChatLoop() {

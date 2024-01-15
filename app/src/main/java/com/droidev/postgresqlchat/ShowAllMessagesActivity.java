@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class ShowAllMessagesActivity extends AppCompatActivity {
 
@@ -23,24 +24,16 @@ public class ShowAllMessagesActivity extends AppCompatActivity {
 
     TinyDB tinyDB;
 
-    Connection connection;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_all_messages);
-
-        connection = MainActivity.connection;
 
         setTitle("Showing all Messages");
 
         tinyDB = new TinyDB(this);
 
         chat = findViewById(R.id.allMessages);
-
-        chat.setMovementMethod(new ScrollingMovementMethod());
-
-        chat.setText(getIntent().getStringExtra("chat"));
 
         if (!tinyDB.getString("textSize").isEmpty()) {
 
@@ -72,11 +65,14 @@ public class ShowAllMessagesActivity extends AppCompatActivity {
 
             positiveButton.setOnClickListener(v -> {
 
-                dbQueries db = new dbQueries();
+                try {
 
-                StringBuilder dbLoad = db.searchMessage(ShowAllMessagesActivity.this, connection, search.getText().toString());
+                    dbQueries db = new dbQueries();
 
-                chat.setText(dbLoad);
+                    db.searchMessage(ShowAllMessagesActivity.this, chat, search.getText().toString());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 
                 dialog.dismiss();
             });

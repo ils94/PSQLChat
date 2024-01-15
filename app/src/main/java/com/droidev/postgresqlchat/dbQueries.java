@@ -1,53 +1,100 @@
 package com.droidev.postgresqlchat;
 
 import android.app.Activity;
+import android.content.Context;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class dbQueries {
 
-    StringBuilder chat = new StringBuilder();
+    public Connection connectDB(Context context) throws SQLException {
 
-    public StringBuilder loadChat(Activity activity, Connection connection, String sql) {
-        Thread thread = new Thread(() -> {
+        TinyDB tinyDB = new TinyDB(context);
+
+        Connection connection = null;
+
+        String dbHost = tinyDB.getString("dbHost");
+        String dbPort = tinyDB.getString("dbPort");
+        String dbName = tinyDB.getString("dbName");
+        String dbUser = tinyDB.getString("dbUser");
+        String dbPass = tinyDB.getString("dbPass");
+
+        String url = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
+
+        if (!dbName.isEmpty()) {
+
+            connection = DriverManager.getConnection(url, dbUser, dbPass);
+        }
+
+        return connection;
+    }
+
+    public void loadChat(Activity activity, TextView textView, ScrollView scrollView, Boolean autoScroll) {
+        new Thread(() -> {
+            Connection connection = null;
 
             try {
 
-                Statement stmt;
+                String sql = "SELECT * FROM CHAT ORDER BY ID ASC LIMIT 1000";
 
-                stmt = connection.createStatement();
+                connection = connectDB(activity);
+
+                Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
 
-                while (rs.next()) {
+                StringBuilder chatBuilder = new StringBuilder();
 
+                while (rs.next()) {
                     String user_name = rs.getString("USER_NAME");
                     String user_message = rs.getString("USER_MESSAGE");
 
-                    chat.append(user_name).append(": ").append(user_message).append("\n");
+                    chatBuilder.append(user_name).append(": ").append(user_message).append("\n");
                 }
 
-            } catch (Exception e) {
-                activity.runOnUiThread(() -> Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
-            }
-        });
-        thread.start();
-        try {
-            thread.join();
-        } catch (Exception e) {
-            activity.runOnUiThread(() -> Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
-        }
+                rs.close();
+                stmt.close();
 
-        return chat;
+                activity.runOnUiThread(() -> {
+                    textView.setText(chatBuilder.toString());
+
+                    if (autoScroll) {
+
+                        scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_DOWN));
+                    }
+                });
+            } catch (SQLException e) {
+                activity.runOnUiThread(() ->
+                        Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
+            } finally {
+                try {
+                    assert connection != null;
+                    connection.close();
+                } catch (SQLException e) {
+                    activity.runOnUiThread(() ->
+                            Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
+                }
+            }
+        }).start();
     }
 
-    public StringBuilder searchMessage(Activity activity, Connection connection, String string) {
-        Thread thread = new Thread(() -> {
+    public void searchMessage(Activity activity, TextView textView, String string) throws SQLException {
+
+        new Thread(() -> {
+            Connection connection = null;
 
             try {
+
+                connection = connectDB(activity);
 
                 PreparedStatement pst;
 
@@ -60,50 +107,71 @@ public class dbQueries {
 
                 ResultSet rs = pst.executeQuery();
 
+                StringBuilder chatBuilder = new StringBuilder();
+
                 while (rs.next()) {
 
                     String user_name = rs.getString("USER_NAME");
                     String user_message = rs.getString("USER_MESSAGE");
 
-                    chat.append(user_name).append(": ").append(user_message).append("\n");
+                    chatBuilder.append(user_name).append(": ").append(user_message).append("\n");
                 }
 
-            } catch (Exception e) {
-                activity.runOnUiThread(() -> Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
-            }
-        });
-        thread.start();
-        try {
-            thread.join();
-        } catch (Exception e) {
-            activity.runOnUiThread(() -> Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
-        }
+                rs.close();
+                pst.close();
 
-        return chat;
+                activity.runOnUiThread(() -> {
+                    textView.setText(chatBuilder.toString());
+                });
+            } catch (SQLException e) {
+                activity.runOnUiThread(() ->
+                        Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
+            } finally {
+                try {
+                    assert connection != null;
+                    connection.close();
+                } catch (SQLException e) {
+                    activity.runOnUiThread(() ->
+                            Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
+                }
+            }
+        }).start();
     }
 
-    public void insertIntoChat(Activity activity, Connection connection, String user_name, String user_message) {
-        Thread thread = new Thread(() -> {
+    public void insertIntoChat(Activity activity, String user_name, String user_message) {
+
+        new Thread(() -> {
+            Connection connection = null;
 
             try {
 
+                connection = connectDB(activity);
+
                 PreparedStatement pst;
+
                 String sql = "INSERT INTO CHAT (USER_NAME, USER_MESSAGE) VALUES (?, ?)";
 
                 pst = connection.prepareStatement(sql);
+
                 pst.setString(1, user_name);
                 pst.setString(2, user_message);
+
                 pst.executeUpdate();
 
-            } catch (Exception e) {
-                activity.runOnUiThread(() -> Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
+                pst.close();
+
+            } catch (SQLException e) {
+                activity.runOnUiThread(() ->
+                        Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
+            } finally {
+                try {
+                    assert connection != null;
+                    connection.close();
+                } catch (SQLException e) {
+                    activity.runOnUiThread(() ->
+                            Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
+                }
             }
-        });
-        thread.start();
-        try {
-            thread.join();
-        } catch (Exception e) {
-            activity.runOnUiThread(() -> Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
-        }
+        }).start();
     }
 }
