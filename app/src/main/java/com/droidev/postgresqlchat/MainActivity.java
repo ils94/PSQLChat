@@ -167,6 +167,22 @@ public class MainActivity extends AppCompatActivity {
                 showAllMessages();
 
                 break;
+
+            case R.id.notificationsON:
+
+                restartBackgroundService();
+
+                Toast.makeText(this, "Notifications ON", Toast.LENGTH_SHORT).show();
+
+                break;
+
+            case R.id.notificationsOFF:
+
+                stopBackgroundService();
+
+                Toast.makeText(this, "Notifications ON", Toast.LENGTH_SHORT).show();
+
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -501,7 +517,6 @@ public class MainActivity extends AppCompatActivity {
         if (!tinyDB.getString("dbName").isEmpty()) {
 
             loadChat();
-            restartBackgroundService();
             loadChatHandlerLoop();
         }
 
