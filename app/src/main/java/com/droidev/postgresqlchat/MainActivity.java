@@ -601,7 +601,21 @@ public class MainActivity extends AppCompatActivity {
 
             ImgurUploader.uploadImage(this, Uri.parse(imagePath), imageUrl -> {
                 if (imageUrl != null) {
-                    prepareToSendText(imageUrl.replace("i.imgur.com", "psqlchat.imgur.com"));
+
+                    AlertDialog dialog = new AlertDialog.Builder(this)
+                            .setTitle("Send this image?")
+                            .setPositiveButton("Yes", null)
+                            .setNegativeButton("No", null)
+                            .show();
+
+                    Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+                    positiveButton.setOnClickListener(v -> {
+
+                        prepareToSendText(imageUrl.replace("i.imgur.com", "psqlchat.imgur.com"));
+
+                        dialog.dismiss();
+                    });
                 }
             });
         }
