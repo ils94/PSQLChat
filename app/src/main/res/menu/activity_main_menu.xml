@@ -16,32 +16,17 @@
         <menu>
             <item
                 android:id="@+id/loginDB"
-                android:title="Database"
+                android:title="Chat Database"
                 tools:ignore="HardcodedText" />
             <item
                 android:id="@+id/loginImgur"
-                android:title="Imgur" />
+                android:title="Imgur API Key" />
         </menu>
 
     </item>
 
     <item
-        android:id="@+id/shareLink"
-        android:title="Share DB Link"
-        tools:ignore="HardcodedText" />
-
-    <item
-        android:id="@+id/changeTextSize"
-        android:title="Change Text Size"
-        tools:ignore="HardcodedText" />
-
-    <item
-        android:id="@+id/showAllMessages"
-        android:title="Show All Messages"
-        tools:ignore="HardcodedText" />
-
-    <item
-        android:title="Notifications"
+        android:title="Notifications..."
         tools:ignore="HardcodedText">
         <menu>
             <item
@@ -52,6 +37,26 @@
                 android:title="Turn off notifications" />
         </menu>
     </item>
+
+    <item
+        android:title="Database..."
+        tools:ignore="HardcodedText">
+        <menu>
+            <item
+                android:id="@+id/shareLink"
+                android:title="Share Database Link"
+                tools:ignore="HardcodedText" />
+            <item
+                android:id="@+id/showAllMessages"
+                android:title="Show all Database Messages"
+                tools:ignore="HardcodedText" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/changeTextSize"
+        android:title="Change Text Size"
+        tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/uploadImage"

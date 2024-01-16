@@ -25,7 +25,7 @@ public class ShowAllMessagesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_all_messages);
 
-        setTitle("Showing all Messages");
+        setTitle("Show all Database Messages");
 
         tinyDB = new TinyDB(this);
 

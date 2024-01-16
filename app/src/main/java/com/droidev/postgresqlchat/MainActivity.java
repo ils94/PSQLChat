@@ -335,8 +335,7 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setCancelable(false)
-                .setTitle("Login")
-                .setMessage("Insert user name and database credentials below:")
+                .setTitle("Insert user name and database credentials below:")
                 .setPositiveButton("Save", null)
                 .setNegativeButton("Cancel", null)
                 .setNeutralButton("Clear all", null)
@@ -423,14 +422,20 @@ public class MainActivity extends AppCompatActivity {
 
             try {
 
-                chat.setTextSize(TypedValue.COMPLEX_UNIT_SP, Float.parseFloat(textSize.getText().toString()));
+                if (!textSize.getText().toString().isEmpty()) {
 
-                TinyDB tinyDB = new TinyDB(MainActivity.this);
+                    chat.setTextSize(TypedValue.COMPLEX_UNIT_SP, Float.parseFloat(textSize.getText().toString()));
 
-                tinyDB.remove("textSize");
-                tinyDB.putString("textSize", textSize.getText().toString());
+                    TinyDB tinyDB = new TinyDB(MainActivity.this);
 
-                dialog.dismiss();
+                    tinyDB.remove("textSize");
+                    tinyDB.putString("textSize", textSize.getText().toString());
+
+                    dialog.dismiss();
+                } else {
+
+                    Toast.makeText(this, "Field cannot be empty.", Toast.LENGTH_SHORT).show();
+                }
 
             } catch (Exception e) {
 
@@ -657,6 +662,8 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .setView(lay)
                 .show();
+
+        key.setText(tinyDB.getString("ImgurAPI"));
 
         Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
 
