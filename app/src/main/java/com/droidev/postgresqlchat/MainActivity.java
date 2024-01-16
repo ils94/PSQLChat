@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
                 restartBackgroundService();
 
-                Toast.makeText(this, "Notifications ON", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Notifications ON.", Toast.LENGTH_SHORT).show();
 
                 break;
 
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
                 stopBackgroundService();
 
-                Toast.makeText(this, "Notifications ON", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Notifications OFF.", Toast.LENGTH_SHORT).show();
 
                 break;
         }
@@ -197,9 +197,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadChat() {
 
-        dbQueries db = new dbQueries();
+        if (NetworkUtils.isNetworkAvailable(this)) {
 
-        db.loadChat(MainActivity.this, chat, scrollView, autoScroll);
+            dbQueries db = new dbQueries();
+
+            db.loadChat(MainActivity.this, chat, scrollView, autoScroll);
+        }
     }
 
     private void loadChatHandlerLoop() {
@@ -221,15 +224,21 @@ public class MainActivity extends AppCompatActivity {
 
         if (!textToSend.getText().toString().isEmpty()) {
 
-            dbQueries db = new dbQueries();
+            if (NetworkUtils.isNetworkAvailable(this)) {
 
-            db.insertIntoChat(MainActivity.this, tinyDB.getString("user"), textToSend.getText().toString(), chat, scrollView, autoScroll);
+                dbQueries db = new dbQueries();
 
-            textToSend.setText("");
+                db.insertIntoChat(MainActivity.this, tinyDB.getString("user"), textToSend.getText().toString(), chat, scrollView, autoScroll);
 
-            resumeChatLoop();
+                textToSend.setText("");
 
-            send.setEnabled(false);
+                resumeChatLoop();
+
+                send.setEnabled(false);
+            } else {
+
+                Toast.makeText(this, "No connection available.", Toast.LENGTH_SHORT).show();
+            }
 
         } else {
 
@@ -489,7 +498,6 @@ public class MainActivity extends AppCompatActivity {
     private void startBackgroundService() {
         Intent serviceIntent = new Intent(this, MyBackgroundService.class);
 
-        // Starting service with startForegroundService for Android Oreo and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent);
         } else {

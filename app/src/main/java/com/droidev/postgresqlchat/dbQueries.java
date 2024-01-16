@@ -50,15 +50,19 @@ public class dbQueries {
 
                 connection = connectDB(activity);
 
-                loadChatMethod(activity, connection, textView, scrollView, autoScroll);
+                if (connection != null) {
+
+                    loadChatMethod(activity, connection, textView, scrollView, autoScroll);
+                }
 
             } catch (SQLException e) {
                 activity.runOnUiThread(() ->
                         Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
             } finally {
                 try {
-                    assert connection != null;
-                    connection.close();
+                    if (connection != null) {
+                        connection.close();
+                    }
                 } catch (SQLException e) {
                     activity.runOnUiThread(() ->
                             Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
@@ -76,38 +80,42 @@ public class dbQueries {
 
                 connection = connectDB(activity);
 
-                PreparedStatement pst;
+                if (connection != null) {
 
-                String sql = "SELECT * FROM CHAT WHERE USER_NAME ILIKE ? OR USER_MESSAGE ILIKE ? ORDER BY ID ASC";
+                    PreparedStatement pst;
 
-                pst = connection.prepareStatement(sql);
+                    String sql = "SELECT * FROM CHAT WHERE USER_NAME ILIKE ? OR USER_MESSAGE ILIKE ? ORDER BY ID ASC";
 
-                pst.setString(1, "%" + string + "%");
-                pst.setString(2, "%" + string + "%");
+                    pst = connection.prepareStatement(sql);
 
-                ResultSet rs = pst.executeQuery();
+                    pst.setString(1, "%" + string + "%");
+                    pst.setString(2, "%" + string + "%");
 
-                StringBuilder chatBuilder = new StringBuilder();
+                    ResultSet rs = pst.executeQuery();
 
-                while (rs.next()) {
+                    StringBuilder chatBuilder = new StringBuilder();
 
-                    String user_name = rs.getString("USER_NAME");
-                    String user_message = rs.getString("USER_MESSAGE");
+                    while (rs.next()) {
 
-                    chatBuilder.append(user_name).append(": ").append(user_message).append("\n");
+                        String user_name = rs.getString("USER_NAME");
+                        String user_message = rs.getString("USER_MESSAGE");
+
+                        chatBuilder.append(user_name).append(": ").append(user_message).append("\n");
+                    }
+
+                    rs.close();
+                    pst.close();
+
+                    activity.runOnUiThread(() -> textView.setText(chatBuilder.toString()));
                 }
-
-                rs.close();
-                pst.close();
-
-                activity.runOnUiThread(() -> textView.setText(chatBuilder.toString()));
             } catch (SQLException e) {
                 activity.runOnUiThread(() ->
                         Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
             } finally {
                 try {
-                    assert connection != null;
-                    connection.close();
+                    if (connection != null) {
+                        connection.close();
+                    }
                 } catch (SQLException e) {
                     activity.runOnUiThread(() ->
                             Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
@@ -125,28 +133,32 @@ public class dbQueries {
 
                 connection = connectDB(activity);
 
-                PreparedStatement pst;
+                if (connection != null) {
 
-                String sql = "INSERT INTO CHAT (USER_NAME, USER_MESSAGE) VALUES (?, ?)";
+                    PreparedStatement pst;
 
-                pst = connection.prepareStatement(sql);
+                    String sql = "INSERT INTO CHAT (USER_NAME, USER_MESSAGE) VALUES (?, ?)";
 
-                pst.setString(1, user_name);
-                pst.setString(2, user_message);
+                    pst = connection.prepareStatement(sql);
 
-                pst.executeUpdate();
+                    pst.setString(1, user_name);
+                    pst.setString(2, user_message);
 
-                pst.close();
+                    pst.executeUpdate();
 
-                loadChatMethod(activity, connection, textView, scrollView, autoScroll);
+                    pst.close();
+
+                    loadChatMethod(activity, connection, textView, scrollView, autoScroll);
+                }
 
             } catch (SQLException e) {
                 activity.runOnUiThread(() ->
                         Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
             } finally {
                 try {
-                    assert connection != null;
-                    connection.close();
+                    if (connection != null) {
+                        connection.close();
+                    }
                 } catch (SQLException e) {
                     activity.runOnUiThread(() ->
                             Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
@@ -161,39 +173,44 @@ public class dbQueries {
 
     public void loadLastMsg(Context context, ChatCallback callback) {
         new Thread(() -> {
-            Connection connection;
-
-            connection = connectDB(context);
+            Connection connection = null;
 
             try {
 
-                String sql = "SELECT * FROM CHAT ORDER BY ID DESC LIMIT 1";
+                connection = connectDB(context);
 
-                Statement stmt = connection.createStatement();
-                ResultSet rs = stmt.executeQuery(sql);
+                if (connection != null) {
 
-                StringBuilder chatBuilder = new StringBuilder();
+                    String sql = "SELECT * FROM CHAT ORDER BY ID DESC LIMIT 1";
 
-                while (rs.next()) {
-                    int ID = rs.getInt("ID");
-                    String user_name = rs.getString("USER_NAME");
-                    String user_message = rs.getString("USER_MESSAGE");
+                    Statement stmt = connection.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql);
 
-                    chatBuilder.append(ID).append("@").append(user_name).append(": ").append(user_message);
+                    StringBuilder chatBuilder = new StringBuilder();
+
+                    while (rs.next()) {
+                        int ID = rs.getInt("ID");
+                        String user_name = rs.getString("USER_NAME");
+                        String user_message = rs.getString("USER_MESSAGE");
+
+                        chatBuilder.append(ID).append("@").append(user_name).append(": ").append(user_message);
+                    }
+
+                    rs.close();
+                    stmt.close();
+
+                    callback.onChatLoaded(chatBuilder.toString());
                 }
-
-                rs.close();
-                stmt.close();
-
-                callback.onChatLoaded(chatBuilder.toString());
 
             } catch (SQLException e) {
                 Log.e("Error", "Exception in loadLastMsg", e);
             } finally {
                 try {
-                    connection.close();
+                    if (connection != null) {
+                        connection.close();
+                    }
                 } catch (SQLException e) {
-                    Log.e("Error", "Error closing connection", e);
+                    Log.e("Error", "SQL Exception: " + e);
                 }
             }
         }).start();
@@ -227,5 +244,4 @@ public class dbQueries {
             }
         });
     }
-
 }

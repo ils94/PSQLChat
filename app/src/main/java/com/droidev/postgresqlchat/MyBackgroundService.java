@@ -61,39 +61,43 @@ public class MyBackgroundService extends Service {
     }
 
     private void performRepeatedTask(Context context) {
-        dbQueries db = new dbQueries();
 
-        MyApplication myApplication = (MyApplication) context.getApplicationContext();
+        if (NetworkUtils.isNetworkAvailable(context)) {
 
-        if (!myApplication.isAppInForeground()) {
+            dbQueries db = new dbQueries();
 
-            db.loadLastMsg(context, chat -> {
-                TinyDB tinyDB = new TinyDB(context);
+            MyApplication myApplication = (MyApplication) context.getApplicationContext();
 
-                ArrayList<String> chatArrayList = tinyDB.getListString("receivedMSGs");
+            if (!myApplication.isAppInForeground()) {
 
-                List<String> chatList = Arrays.asList(chat.split("@"));
+                db.loadLastMsg(context, chat -> {
+                    TinyDB tinyDB = new TinyDB(context);
 
-                if (!tinyDB.getString("lastMSG").equals(chatList.get(0))) {
-                    chatArrayList.add(chatList.get(1));
+                    ArrayList<String> chatArrayList = tinyDB.getListString("receivedMSGs");
 
-                    int maxSize = Math.min(chatArrayList.size(), 5);
-                    List<String> last5Messages = new ArrayList<>(chatArrayList.subList(chatArrayList.size() - maxSize, chatArrayList.size()));
+                    List<String> chatList = Arrays.asList(chat.split("@"));
 
-                    Collections.reverse(last5Messages);
+                    if (!tinyDB.getString("lastMSG").equals(chatList.get(0))) {
+                        chatArrayList.add(chatList.get(1));
 
-                    tinyDB.putListString("receivedMSGs", chatArrayList);
+                        int maxSize = Math.min(chatArrayList.size(), 5);
+                        List<String> last5Messages = new ArrayList<>(chatArrayList.subList(chatArrayList.size() - maxSize, chatArrayList.size()));
 
-                    StringBuilder messageBuilder = new StringBuilder();
-                    for (String message : last5Messages) {
-                        messageBuilder.append(message).append("\n");
+                        Collections.reverse(last5Messages);
+
+                        tinyDB.putListString("receivedMSGs", chatArrayList);
+
+                        StringBuilder messageBuilder = new StringBuilder();
+                        for (String message : last5Messages) {
+                            messageBuilder.append(message).append("\n");
+                        }
+
+                        showNotification(context, messageBuilder.toString());
+
+                        tinyDB.putString("lastMSG", chatList.get(0));
                     }
-
-                    showNotification(context, messageBuilder.toString());
-
-                    tinyDB.putString("lastMSG", chatList.get(0));
-                }
-            });
+                });
+            }
         }
     }
 
