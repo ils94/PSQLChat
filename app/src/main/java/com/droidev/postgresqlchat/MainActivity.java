@@ -568,11 +568,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void startUp() {
 
+        tinyDB.remove("receivedMSGs");
+
         if (!tinyDB.getString("dbName").isEmpty()) {
 
             loadChat();
             loadChatHandlerLoop();
-            tinyDB.remove("receivedMSGs");
         }
 
     }
