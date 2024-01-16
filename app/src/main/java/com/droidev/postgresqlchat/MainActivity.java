@@ -223,15 +223,13 @@ public class MainActivity extends AppCompatActivity {
 
             dbQueries db = new dbQueries();
 
-            db.insertIntoChat(MainActivity.this, tinyDB.getString("user"), textToSend.getText().toString());
+            db.insertIntoChat(MainActivity.this, tinyDB.getString("user"), textToSend.getText().toString(), chat, scrollView, autoScroll);
 
             textToSend.setText("");
 
             resumeChatLoop();
 
             send.setEnabled(false);
-
-            loadChat();
 
         } else {
 

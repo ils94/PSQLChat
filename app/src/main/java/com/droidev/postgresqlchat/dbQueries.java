@@ -48,33 +48,10 @@ public class dbQueries {
 
             try {
 
-                String sql = "SELECT * FROM CHAT ORDER BY ID ASC LIMIT 1000";
-
                 connection = connectDB(activity);
 
-                Statement stmt = connection.createStatement();
-                ResultSet rs = stmt.executeQuery(sql);
+                loadChatMethod(activity, connection, textView, scrollView, autoScroll);
 
-                StringBuilder chatBuilder = new StringBuilder();
-
-                while (rs.next()) {
-                    String user_name = rs.getString("USER_NAME");
-                    String user_message = rs.getString("USER_MESSAGE");
-
-                    chatBuilder.append(user_name).append(": ").append(user_message).append("\n");
-                }
-
-                rs.close();
-                stmt.close();
-
-                activity.runOnUiThread(() -> {
-                    textView.setText(chatBuilder.toString());
-
-                    if (autoScroll) {
-
-                        scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_DOWN));
-                    }
-                });
             } catch (SQLException e) {
                 activity.runOnUiThread(() ->
                         Toast.makeText(activity.getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show());
@@ -139,7 +116,7 @@ public class dbQueries {
         }).start();
     }
 
-    public void insertIntoChat(Activity activity, String user_name, String user_message) {
+    public void insertIntoChat(Activity activity, String user_name, String user_message, TextView textView, ScrollView scrollView, Boolean autoScroll) {
 
         new Thread(() -> {
             Connection connection = null;
@@ -160,6 +137,8 @@ public class dbQueries {
                 pst.executeUpdate();
 
                 pst.close();
+
+                loadChatMethod(activity, connection, textView, scrollView, autoScroll);
 
             } catch (SQLException e) {
                 activity.runOnUiThread(() ->
@@ -186,8 +165,12 @@ public class dbQueries {
 
             connection = connectDB(context);
 
-            try (Statement stmt = connection.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT * FROM CHAT ORDER BY ID DESC LIMIT 1")) {
+            try {
+
+                String sql = "SELECT * FROM CHAT ORDER BY ID DESC LIMIT 1";
+
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
 
                 StringBuilder chatBuilder = new StringBuilder();
 
@@ -198,6 +181,9 @@ public class dbQueries {
 
                     chatBuilder.append(ID).append("@").append(user_name).append(": ").append(user_message);
                 }
+
+                rs.close();
+                stmt.close();
 
                 callback.onChatLoaded(chatBuilder.toString());
 
@@ -211,6 +197,35 @@ public class dbQueries {
                 }
             }
         }).start();
+    }
+
+    public void loadChatMethod(Activity activity, Connection connection, TextView textView, ScrollView scrollView, Boolean autoScroll) throws SQLException {
+
+        String sql = "SELECT * FROM CHAT ORDER BY ID ASC LIMIT 1000";
+
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+
+        StringBuilder chatBuilder = new StringBuilder();
+
+        while (rs.next()) {
+            String user_name = rs.getString("USER_NAME");
+            String user_message = rs.getString("USER_MESSAGE");
+
+            chatBuilder.append(user_name).append(": ").append(user_message).append("\n");
+        }
+
+        rs.close();
+        stmt.close();
+
+        activity.runOnUiThread(() -> {
+            textView.setText(chatBuilder.toString());
+
+            if (autoScroll) {
+
+                scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_DOWN));
+            }
+        });
     }
 
 }
