@@ -2,6 +2,7 @@ package com.droidev.postgresqlchat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -21,7 +22,6 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,8 +33,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-
 public class MainActivity extends AppCompatActivity {
 
     private TextView chat;
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private Button send;
     private ScrollView scrollView;
 
-    private Boolean confirm = false, autoScroll = true;
+    private Boolean autoScroll = true;
 
     private Handler handler;
     private final int delay = 5000;
@@ -52,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private TinyDB tinyDB;
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    private static final int STORAGE_PERMISSION_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +62,18 @@ public class MainActivity extends AppCompatActivity {
 
             String path = uri.toString();
 
-            deepLink(path.replace("https://psqlchat.go/", ""));
+            if (path.contains("psqlchat")) {
+
+                deepLink(path.replace("https://psqlchat.go/", ""));
+
+            }
+
+            if (path.contains("psqlchat.imgur.com")) {
+
+                openWebView(path.replace("psqlchat.imgur.com", "i.imgur.com"));
+
+                MainActivity.this.finish();
+            }
         }
 
         tinyDB = new TinyDB(this);
@@ -96,9 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (actionId == EditorInfo.IME_ACTION_SEND) {
 
-
                 sendText();
-
 
                 return true;
             }
@@ -118,20 +124,13 @@ public class MainActivity extends AppCompatActivity {
         startUp();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (confirm) {
-            Handler handler = new Handler();
-            handler.removeCallbacksAndMessages(null);
-            finish();
-        } else {
-            Toast.makeText(this, "Press back again to exit app.",
-                    Toast.LENGTH_SHORT).show();
-            confirm = true;
-            new Handler().postDelayed(() -> confirm = false, 3 * 1000);
-        }
+    private void openWebView(String url) {
+        Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra("url", url);
+        startActivity(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -191,9 +190,16 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.notificationsON:
 
-                restartBackgroundService();
+                String permission_storage = Manifest.permission.POST_NOTIFICATIONS;
 
-                Toast.makeText(this, "Notifications ON.", Toast.LENGTH_SHORT).show();
+                if (ContextCompat.checkSelfPermission(this, permission_storage) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{permission_storage}, 3);
+                } else {
+
+                    restartBackgroundService();
+
+                    Toast.makeText(this, "Notifications ON.", Toast.LENGTH_SHORT).show();
+                }
 
                 break;
 
@@ -207,12 +213,12 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.uploadImage:
 
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            STORAGE_PERMISSION_REQUEST_CODE);
+                String permission_notification = Manifest.permission.READ_MEDIA_IMAGES;
+
+                if (ContextCompat.checkSelfPermission(this, permission_notification) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{permission_notification}, 2);
                 } else {
+
                     pickImage();
                 }
 
@@ -567,8 +573,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void pickImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+
+        if (tinyDB.getString("ImgurAPI").isEmpty()) {
+
+            saveImgurAPIKey();
+        } else {
+
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        }
+
     }
 
     @Override
@@ -582,7 +596,7 @@ public class MainActivity extends AppCompatActivity {
 
             ImgurUploader.uploadImage(this, Uri.parse(imagePath), imageUrl -> {
                 if (imageUrl != null) {
-                    prepareToSendText(imageUrl);
+                    prepareToSendText(imageUrl.replace("i.imgur.com", "psqlchat.imgur.com"));
                 }
             });
         }
@@ -607,13 +621,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == STORAGE_PERMISSION_REQUEST_CODE) {
+
+        if (requestCode == 2) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 pickImage();
             } else {
                 Toast.makeText(this, "Storage permission is required to pick an image.", Toast.LENGTH_SHORT).show();
             }
         }
+
+        if (requestCode == 3) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                restartBackgroundService();
+            } else {
+                Toast.makeText(this, "Allow notifications first.", Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 
     public void saveImgurAPIKey() {
@@ -643,6 +667,9 @@ public class MainActivity extends AppCompatActivity {
                 tinyDB.putString("ImgurAPI", key.getText().toString().replace(" ", "").replace("\n", ""));
 
                 dialog.dismiss();
+            } else {
+
+                Toast.makeText(this, "Field cannot be empty.", Toast.LENGTH_SHORT).show();
             }
         });
     }

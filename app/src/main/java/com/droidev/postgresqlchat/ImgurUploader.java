@@ -1,5 +1,6 @@
 package com.droidev.postgresqlchat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -28,6 +29,7 @@ public class ImgurUploader {
     }
 
     private static class UploadImageAsyncTask extends AsyncTask<Void, Void, String> {
+        @SuppressLint("StaticFieldLeak")
         private final Context context;
         private final Uri imageUri;
         private final UploadCallback callback;
