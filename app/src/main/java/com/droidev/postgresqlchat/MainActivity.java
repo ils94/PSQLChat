@@ -685,6 +685,8 @@ public class MainActivity extends AppCompatActivity {
 
             if (!key.getText().toString().isEmpty()) {
 
+                tinyDB.remove("ImgurAPI");
+
                 tinyDB.putString("ImgurAPI", key.getText().toString().replace(" ", "").replace("\n", ""));
 
                 dialog.dismiss();
