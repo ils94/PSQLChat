@@ -55,4 +55,4 @@ Or when you try to upload an image to Imgur without the API Key set, it will pro
 
 # Download
 
-You can download the App from this [link](https://github.com/ils94/PSQLChat/releases/download/release/postgresqlchat.apk).
+You can download the App from this [link](https://github.com/ils94/PSQLChat/releases/download/release/PSQLChat.apk).
