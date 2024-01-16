@@ -1,6 +1,6 @@
 # About
 
-PSQLChat is a simple Android application that uses PostgreSQL as backend with a simple table scheme to store and retrieve messages.
+PSQLChat is a simple Android application that uses PostgreSQL database as backend with a simple table scheme to store and retrieve messages.
 
 ---
 
