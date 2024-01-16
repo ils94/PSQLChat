@@ -11,9 +11,19 @@
         tools:ignore="HardcodedText" />
 
     <item
-        android:id="@+id/login"
-        android:title="Login"
-        tools:ignore="HardcodedText" />
+        android:title="Login..."
+        tools:ignore="HardcodedText">
+        <menu>
+            <item
+                android:id="@+id/loginDB"
+                android:title="Database"
+                tools:ignore="HardcodedText" />
+            <item
+                android:id="@+id/loginImgur"
+                android:title="Imgur" />
+        </menu>
+
+    </item>
 
     <item
         android:id="@+id/shareLink"

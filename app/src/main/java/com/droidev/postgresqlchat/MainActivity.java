@@ -143,9 +143,15 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
 
-            case R.id.login:
+            case R.id.loginDB:
 
                 login();
+
+                break;
+
+            case R.id.loginImgur:
+
+                saveImgurAPIKey();
 
                 break;
 
@@ -252,25 +258,30 @@ public class MainActivity extends AppCompatActivity {
 
         if (!textToSend.getText().toString().isEmpty()) {
 
-            if (NetworkUtils.isNetworkAvailable(this)) {
-
-                dbQueries db = new dbQueries();
-
-                db.insertIntoChat(MainActivity.this, tinyDB.getString("user"), textToSend.getText().toString(), chat, scrollView, autoScroll);
-
-                textToSend.setText("");
-
-                resumeChatLoop();
-
-                send.setEnabled(false);
-            } else {
-
-                Toast.makeText(this, "No connection available.", Toast.LENGTH_SHORT).show();
-            }
+            prepareToSendText(textToSend.getText().toString());
 
         } else {
 
             Toast.makeText(this, "Message cannot be empty.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void prepareToSendText(String msg) {
+
+        if (NetworkUtils.isNetworkAvailable(this)) {
+
+            dbQueries db = new dbQueries();
+
+            db.insertIntoChat(MainActivity.this, tinyDB.getString("user"), msg, chat, scrollView, autoScroll);
+
+            textToSend.setText("");
+
+            resumeChatLoop();
+
+            send.setEnabled(false);
+        } else {
+
+            Toast.makeText(this, "No connection available.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -571,7 +582,7 @@ public class MainActivity extends AppCompatActivity {
 
             ImgurUploader.uploadImage(this, Uri.parse(imagePath), imageUrl -> {
                 if (imageUrl != null) {
-                    Log.d("ImageUploadActivity", "Image link: " + imageUrl);
+                    prepareToSendText(imageUrl);
                 }
             });
         }
@@ -603,6 +614,37 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Storage permission is required to pick an image.", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void saveImgurAPIKey() {
+
+        EditText key = new EditText(this);
+        key.setInputType(InputType.TYPE_CLASS_TEXT);
+        key.setMaxLines(1);
+
+        LinearLayout lay = new LinearLayout(this);
+        lay.setOrientation(LinearLayout.VERTICAL);
+        lay.addView(key);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setTitle("Save Imgur API Key")
+                .setPositiveButton("Save", null)
+                .setNegativeButton("Cancel", null)
+                .setView(lay)
+                .show();
+
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+        positiveButton.setOnClickListener(v -> {
+
+            if (!key.getText().toString().isEmpty()) {
+
+                tinyDB.putString("ImgurAPI", key.getText().toString().replace(" ", "").replace("\n", ""));
+
+                dialog.dismiss();
+            }
+        });
     }
 
 }

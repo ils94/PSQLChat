@@ -45,7 +45,7 @@ public class ImgurUploader {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(IMGUR_API_BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(getOkHttpClient())
+                    .client(getOkHttpClient(context))
                     .build();
 
             ImgurApiService imgurApiService = retrofit.create(ImgurApiService.class);
@@ -79,12 +79,15 @@ public class ImgurUploader {
         }
     }
 
-    private static OkHttpClient getOkHttpClient() {
+    private static OkHttpClient getOkHttpClient(Context context) {
+
+        TinyDB tinyDB = new TinyDB(context);
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
             Request.Builder requestBuilder = original.newBuilder()
-                    .header("Authorization", "Client-ID " + IMGUR_CLIENT_ID);
+                    .header("Authorization", "Client-ID " + tinyDB.getString("ImgurAPI"));
 
             Request request = requestBuilder.build();
             return chain.proceed(request);
