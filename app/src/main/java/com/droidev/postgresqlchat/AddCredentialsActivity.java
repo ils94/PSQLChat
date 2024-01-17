@@ -21,10 +21,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
     private EditText editTextDbPass;
     private EditText editTextDbHost;
     private EditText editTextDbPort;
-    private Button saveButton;
     private TinyDB tinyDB;
-    private String link;
-    private Menu menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +30,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
 
         tinyDB = new TinyDB(this);
 
-        link = getIntent().getStringExtra("link");
+        String link = getIntent().getStringExtra("link");
 
         identifyNameEditText = findViewById(R.id.identifyName);
         editTextUser = findViewById(R.id.editTextUser);
@@ -42,7 +39,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
         editTextDbPass = findViewById(R.id.editTextDbPass);
         editTextDbHost = findViewById(R.id.editTextDbHost);
         editTextDbPort = findViewById(R.id.editTextDbPort);
-        saveButton = findViewById(R.id.saveButton);
+        Button saveButton = findViewById(R.id.saveButton);
 
         saveButton.setOnClickListener(view -> saveDBCredentials());
 
@@ -81,7 +78,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
             String[] credentials = savedDB.split("\\|");
             if (credentials.length >= 2 && credentials[0].equals(identifyName) || credentials[2].equals(dbName)) {
 
-                Toast.makeText(this, "This Database is already saved.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "This database is already saved.", Toast.LENGTH_SHORT).show();
 
                 return;
             }
@@ -117,8 +114,6 @@ public class AddCredentialsActivity extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.add_credentials_menu, menu);
-
-        menuItem = menu;
 
         return super.onCreateOptionsMenu(menu);
     }

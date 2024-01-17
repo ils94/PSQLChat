@@ -456,8 +456,8 @@ public class MainActivity extends AppCompatActivity {
 
             loadChat();
             loadChatHandlerLoop();
+            setTitle(tinyDB.getString("identifyName"));
         }
-
     }
 
     private void pickImage() {

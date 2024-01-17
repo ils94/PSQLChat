@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<DatabaseDetails> dataSet;
+    private final ArrayList<DatabaseDetails> dataSet;
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
@@ -68,12 +68,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.getTextViewIdentifyName().setText("Database Name:\n" + details.getIdentifyName());
         holder.getTextViewEditTextUser().setText("Username:\n" + details.getUsername());
 
-        holder.getCardView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(position);
-                }
+        holder.getCardView().setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(position);
             }
         });
     }

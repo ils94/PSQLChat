@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/chooseDBMenu2"
-        android:title="Choose Database"
+        android:title="Choose Database's Credentials"
         tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/addDB2"
-        android:title="Add Database"
+        android:title="Add Database's Credentials"
         tools:ignore="HardcodedText" />
 </menu>

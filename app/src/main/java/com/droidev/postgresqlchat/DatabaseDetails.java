@@ -3,13 +3,13 @@ package com.droidev.postgresqlchat;
 import java.io.Serializable;
 
 public class DatabaseDetails implements Serializable {
-    private String identifyName;
-    private String username;
-    private String dbName;
-    private String dbUser;
-    private String dbPass;
-    private String dbHost;
-    private String dbPort;
+    private final String identifyName;
+    private final String username;
+    private final String dbName;
+    private final String dbUser;
+    private final String dbPass;
+    private final String dbHost;
+    private final String dbPort;
 
     public DatabaseDetails(String identifyName, String username, String dbName, String dbUser, String dbPass, String dbHost, String dbPort) {
         this.identifyName = identifyName;

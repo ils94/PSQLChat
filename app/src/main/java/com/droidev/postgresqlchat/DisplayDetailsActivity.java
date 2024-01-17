@@ -1,22 +1,16 @@
 package com.droidev.postgresqlchat;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
@@ -33,8 +27,6 @@ public class DisplayDetailsActivity extends AppCompatActivity {
     private EditText dbPassEditText;
     private EditText dbHostEditText;
     private EditText dbPortEditText;
-
-    private Menu menuItem;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,6 +92,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 
                 clearTinyDBKeys();
 
+                tinyDB.putString("identifyName", identifyNameEditText.getText().toString());
                 tinyDB.putString("user", userNameEditText.getText().toString());
                 tinyDB.putString("dbName", dbNameEditText.getText().toString());
                 tinyDB.putString("dbUser", dbUserEditText.getText().toString());
@@ -107,7 +100,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
                 tinyDB.putString("dbHost", dbHostEditText.getText().toString());
                 tinyDB.putString("dbPort", dbPortEditText.getText().toString());
 
-                Toast.makeText(DisplayDetailsActivity.this, "Set Database to connect to: " + identifyNameEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(DisplayDetailsActivity.this, "Set database's credentials to connect to: " + identifyNameEditText.getText().toString() + ".", Toast.LENGTH_SHORT).show();
 
                 DisplayDetailsActivity.this.finish();
             }
@@ -175,8 +168,6 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.display_details_menu, menu);
-
-        menuItem = menu;
 
         return super.onCreateOptionsMenu(menu);
     }

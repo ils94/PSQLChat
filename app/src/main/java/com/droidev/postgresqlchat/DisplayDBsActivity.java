@@ -1,8 +1,6 @@
 package com.droidev.postgresqlchat;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,8 +9,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +21,6 @@ public class DisplayDBsActivity extends AppCompatActivity {
     private ArrayList<String> savedDBs;
     private ArrayList<DatabaseDetails> databaseDetailsList;
     private RecyclerViewAdapter adapter;
-    private Menu menuItem;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,8 +99,6 @@ public class DisplayDBsActivity extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.display_dbs_activity_menu, menu);
-
-        menuItem = menu;
 
         return super.onCreateOptionsMenu(menu);
     }
