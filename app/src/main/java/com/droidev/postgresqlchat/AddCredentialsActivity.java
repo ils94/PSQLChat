@@ -20,6 +20,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
     private EditText editTextDbPort;
     private Button saveButton;
     TinyDB tinyDB;
+    String link;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,8 @@ public class AddCredentialsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_credentials);
 
         tinyDB = new TinyDB(this);
+
+        link = getIntent().getStringExtra("link");
 
         identifyNameEditText = findViewById(R.id.identifyName);
         editTextUser = findViewById(R.id.editTextUser);
@@ -38,6 +41,17 @@ public class AddCredentialsActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.saveButton);
 
         saveButton.setOnClickListener(view -> saveDBCredentials());
+
+        if (!link.isEmpty()) {
+
+            String[] linkArray = link.split("/");
+
+            editTextDbName.setText(linkArray[0]);
+            editTextDbUser.setText(linkArray[1]);
+            editTextDbPass.setText(linkArray[2]);
+            editTextDbHost.setText(linkArray[3]);
+            editTextDbPort.setText(linkArray[4]);
+        }
     }
 
     private void saveDBCredentials() {

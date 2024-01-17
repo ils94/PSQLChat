@@ -66,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (path.contains("psqlchat")) {
 
-                deepLink(path.replace("https://psqlchat.go/", ""));
+                Intent intent = new Intent(MainActivity.this, AddCredentialsActivity.class);
+                intent.putExtra("link", path.replace("https://psqlchat.go/", ""));
+                startActivity(intent);
 
             }
 
@@ -387,16 +389,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void clearTinyDBKeys() {
-
-        tinyDB.remove("user");
-        tinyDB.remove("dbName");
-        tinyDB.remove("dbUser");
-        tinyDB.remove("dbPass");
-        tinyDB.remove("dbHost");
-        tinyDB.remove("dbPort");
-    }
-
     public void deepLink(String link) {
 
         EditText userName = new EditText(this);
@@ -430,8 +422,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
 
                 String[] linkArray = link.split("/");
-
-                clearTinyDBKeys();
 
                 tinyDB.putString("user", userName.getText().toString());
                 tinyDB.putString("dbName", linkArray[0]);
