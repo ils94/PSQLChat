@@ -27,7 +27,7 @@ No webserver is necessary, just create yourself a PostgreSQL database, host it s
 - Save your own Imgur API Key;
 - Pause/Resume Chat loop to be able to see all chat messages;
 - Show all database messages, and let you search messages within the database;
-- Turn on notifications and receive the last 5 messages sent to the database;
+- Turn on notifications and receive the last 10 messages sent to the database (may vary depending on the phone);
 - Share database link for easier login into the database;
 - Adjust font size.
 
