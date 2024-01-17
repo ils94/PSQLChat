@@ -22,8 +22,8 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 
         DatabaseDetails selectedDBDetails = (DatabaseDetails) getIntent().getSerializableExtra("selectedDBDetails");
 
-        String identifyName = selectedDBDetails.getIdentifyName();
-        String userName = selectedDBDetails.getUsername();
+        String identifyName = selectedDBDetails.getIdentifyName().replace("Database Name:\n", "");
+        String userName = selectedDBDetails.getUsername().replace("Username:\n", "");
         String dbName = selectedDBDetails.getDbName();
         String dbUser = selectedDBDetails.getDbUser();
         String dbPass = selectedDBDetails.getDbPass();

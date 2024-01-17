@@ -60,13 +60,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new ViewHolder(view);
     }
 
-    @SuppressLint("RecyclerView")
+    @SuppressLint({"RecyclerView", "SetTextI18n"})
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         DatabaseDetails details = dataSet.get(position);
 
-        holder.getTextViewIdentifyName().setText(details.getIdentifyName());
-        holder.getTextViewEditTextUser().setText(details.getUsername());
+        holder.getTextViewIdentifyName().setText("Database Name:\n" + details.getIdentifyName());
+        holder.getTextViewEditTextUser().setText("Username:\n" + details.getUsername());
 
         holder.getCardView().setOnClickListener(new View.OnClickListener() {
             @Override
