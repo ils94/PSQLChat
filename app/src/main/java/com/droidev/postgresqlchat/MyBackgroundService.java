@@ -76,7 +76,8 @@ public class MyBackgroundService extends Service {
 
                 List<String> chatList = Arrays.asList(chat.split("@"));
 
-                if (!tinyDB.getString("lastMSG").equals(chatList.get(0))
+                if (chatList.size() >= 2
+                        && !tinyDB.getString("lastMSG").equals(chatList.get(0))
                         && !chatList.get(1).contains(tinyDB.getString("user"))) {
 
                     tinyDB.putString("lastMSG", chatList.get(0));

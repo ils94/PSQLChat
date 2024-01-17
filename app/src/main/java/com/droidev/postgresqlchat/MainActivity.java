@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
+    private boolean isAppRunning = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -254,10 +256,34 @@ public class MainActivity extends AppCompatActivity {
 
         handler.postDelayed(new Runnable() {
             public void run() {
-                loadChat();
-                handler.postDelayed(this, delay);
+                if (isAppRunning) {
+                    loadChat();
+                    handler.postDelayed(this, delay);
+                }
             }
         }, delay);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isAppRunning = false; // Set the flag to false when the app is stopped or minimized
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isAppRunning = false; // Set the flag to false when the app is destroyed
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isAppRunning = true; // Set the flag to true when the app resumes
+        startUp(); // Restart the loop when the app comes back from minimized
     }
 
     private void sendText() {
