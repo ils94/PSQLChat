@@ -2,6 +2,7 @@ package com.droidev.postgresqlchat;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -9,9 +10,21 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class DisplayDetailsActivity extends AppCompatActivity {
 
     TinyDB tinyDB;
+    ArrayList<String> savedDBs;
+    String current;
+
+    EditText identifyNameEditText;
+    EditText userNameEditText;
+    EditText dbNameEditText;
+    EditText dbUserEditText;
+    EditText dbPassEditText;
+    EditText dbHostEditText;
+    EditText dbPortEditText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -19,6 +32,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_details);
 
         tinyDB = new TinyDB(this);
+        savedDBs = tinyDB.getListString("savedDBs");
 
         DatabaseDetails selectedDBDetails = (DatabaseDetails) getIntent().getSerializableExtra("selectedDBDetails");
 
@@ -30,13 +44,13 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         String dbHost = selectedDBDetails.getDbHost();
         String dbPort = selectedDBDetails.getDbPort();
 
-        EditText identifyNameEditText = findViewById(R.id.detailsDisplayIdentifyName);
-        EditText userNameEditText = findViewById(R.id.detailsDisplayUserName);
-        EditText dbNameEditText = findViewById(R.id.detailsDisplayDbName);
-        EditText dbUserEditText = findViewById(R.id.detailsDisplayDbUser);
-        EditText dbPassEditText = findViewById(R.id.detailsDisplayDbPass);
-        EditText dbHostEditText = findViewById(R.id.detailsDisplayDbHost);
-        EditText dbPortEditText = findViewById(R.id.detailsDisplayDbPort);
+        identifyNameEditText = findViewById(R.id.detailsDisplayIdentifyName);
+        userNameEditText = findViewById(R.id.detailsDisplayUserName);
+        dbNameEditText = findViewById(R.id.detailsDisplayDbName);
+        dbUserEditText = findViewById(R.id.detailsDisplayDbUser);
+        dbPassEditText = findViewById(R.id.detailsDisplayDbPass);
+        dbHostEditText = findViewById(R.id.detailsDisplayDbHost);
+        dbPortEditText = findViewById(R.id.detailsDisplayDbPort);
 
         Button editButton = findViewById(R.id.detailsBtnEdit);
         Button connectButton = findViewById(R.id.detailsBtnConnect);
@@ -48,6 +62,14 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         dbPassEditText.setText(dbPass);
         dbHostEditText.setText(dbHost);
         dbPortEditText.setText(dbPort);
+
+        current = (identifyNameEditText.getText().toString()
+                + "|" + userNameEditText.getText().toString()
+                + "|" + dbNameEditText.getText().toString()
+                + "|" + dbUserEditText.getText().toString()
+                + "|" + dbPassEditText.getText().toString()
+                + "|" + dbHostEditText.getText().toString()
+                + "|" + dbPortEditText.getText().toString());
 
         connectButton.setOnClickListener(view -> {
 
@@ -77,6 +99,14 @@ public class DisplayDetailsActivity extends AppCompatActivity {
             }
         });
 
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+            }
+        });
+
     }
 
     private void clearTinyDBKeys() {
@@ -87,5 +117,28 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         tinyDB.remove("dbPass");
         tinyDB.remove("dbHost");
         tinyDB.remove("dbPort");
+    }
+
+    private void updateTinyDB() {
+
+        String newValue = (identifyNameEditText.getText().toString()
+                + "|" + userNameEditText.getText().toString()
+                + "|" + dbNameEditText.getText().toString()
+                + "|" + dbUserEditText.getText().toString()
+                + "|" + dbPassEditText.getText().toString()
+                + "|" + dbHostEditText.getText().toString()
+                + "|" + dbPortEditText.getText().toString());
+
+        int index = savedDBs.indexOf(current);
+
+        if (index != -1) {
+
+            savedDBs.set(index, newValue);
+
+        } else {
+            System.out.println("Element not found in the list.");
+        }
+
+        tinyDB.putListString("savedDBs", savedDBs);
     }
 }
