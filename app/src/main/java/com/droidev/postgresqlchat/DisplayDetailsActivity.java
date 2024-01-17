@@ -1,7 +1,7 @@
 package com.droidev.postgresqlchat;
 
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,11 +20,15 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 
         tinyDB = new TinyDB(this);
 
-        String selectedDBDetails = getIntent().getStringExtra("selectedDBDetails");
+        DatabaseDetails selectedDBDetails = (DatabaseDetails) getIntent().getSerializableExtra("selectedDBDetails");
 
-        String[] detailsArray = selectedDBDetails.split("\\|");
-
-        System.out.println("array: " + detailsArray[0]);
+        String identifyName = selectedDBDetails.getIdentifyName();
+        String userName = selectedDBDetails.getUsername();
+        String dbName = selectedDBDetails.getDbName();
+        String dbUser = selectedDBDetails.getDbUser();
+        String dbPass = selectedDBDetails.getDbPass();
+        String dbHost = selectedDBDetails.getDbHost();
+        String dbPort = selectedDBDetails.getDbPort();
 
         EditText identifyNameEditText = findViewById(R.id.detailsDisplayIdentifyName);
         EditText userNameEditText = findViewById(R.id.detailsDisplayUserName);
@@ -37,15 +41,13 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         Button editButton = findViewById(R.id.detailsBtnEdit);
         Button connectButton = findViewById(R.id.detailsBtnConnect);
 
-        if (detailsArray.length == 7) {
-            identifyNameEditText.setText(detailsArray[0]);
-            userNameEditText.setText(detailsArray[1]);
-            dbNameEditText.setText(detailsArray[2]);
-            dbUserEditText.setText(detailsArray[3]);
-            dbPassEditText.setText(detailsArray[4]);
-            dbHostEditText.setText(detailsArray[5]);
-            dbPortEditText.setText(detailsArray[6]);
-        }
+        identifyNameEditText.setText(identifyName);
+        userNameEditText.setText(userName);
+        dbNameEditText.setText(dbName);
+        dbUserEditText.setText(dbUser);
+        dbPassEditText.setText(dbPass);
+        dbHostEditText.setText(dbHost);
+        dbPortEditText.setText(dbPort);
 
         connectButton.setOnClickListener(view -> {
 

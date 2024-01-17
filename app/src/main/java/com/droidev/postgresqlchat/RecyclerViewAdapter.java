@@ -1,18 +1,19 @@
 package com.droidev.postgresqlchat;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<String> dataSet;
+    private ArrayList<DatabaseDetails> dataSet;
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
@@ -24,19 +25,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private final TextView textViewIdentifyName;
+        private final TextView textViewEditTextUser;
+        private final CardView cardView;
 
         public ViewHolder(View view) {
             super(view);
-            textView = view.findViewById(R.id.textViewSavedDB);
+            cardView = view.findViewById(R.id.cardViewSavedDB);
+            textViewIdentifyName = view.findViewById(R.id.textViewIdentifyName);
+            textViewEditTextUser = view.findViewById(R.id.textViewEditTextUser);
         }
 
-        public TextView getTextView() {
-            return textView;
+        public CardView getCardView() {
+            return cardView;
+        }
+
+        public TextView getTextViewIdentifyName() {
+            return textViewIdentifyName;
+        }
+
+        public TextView getTextViewEditTextUser() {
+            return textViewEditTextUser;
         }
     }
 
-    public RecyclerViewAdapter(ArrayList<String> data) {
+    public RecyclerViewAdapter(ArrayList<DatabaseDetails> data) {
         this.dataSet = data;
     }
 
@@ -47,11 +60,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new ViewHolder(view);
     }
 
+    @SuppressLint("RecyclerView")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.getTextView().setText(dataSet.get(position));
+        DatabaseDetails details = dataSet.get(position);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.getTextViewIdentifyName().setText(details.getIdentifyName());
+        holder.getTextViewEditTextUser().setText(details.getUsername());
+
+        holder.getCardView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
@@ -66,4 +83,3 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return dataSet.size();
     }
 }
-

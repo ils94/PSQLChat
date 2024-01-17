@@ -14,57 +14,69 @@ import java.util.ArrayList;
 
 public class DisplayDBsActivity extends AppCompatActivity {
 
+    private TinyDB tinyDB;
+    private ArrayList<String> savedDBs;
+    private ArrayList<DatabaseDetails> databaseDetailsList;
+    private RecyclerViewAdapter adapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_dbs);
 
-        // Retrieve saved databases from TinyDB
-        TinyDB tinyDB = new TinyDB(this);
-        ArrayList<String> savedDBs = tinyDB.getListString("savedDBs");
+        tinyDB = new TinyDB(this);
+        savedDBs = tinyDB.getListString("savedDBs");
+        databaseDetailsList = new ArrayList<>();
 
-        // Initialize RecyclerView and RecyclerViewAdapter
+        for (String savedDB : savedDBs) {
+            String[] detailsArray = savedDB.split("\\|");
+            if (detailsArray.length >= 7) {
+                DatabaseDetails databaseDetails = new DatabaseDetails(
+                        detailsArray[0], detailsArray[1], detailsArray[2],
+                        detailsArray[3], detailsArray[4], detailsArray[5],
+                        detailsArray[6]
+                );
+                databaseDetailsList.add(databaseDetails);
+            }
+        }
+
         RecyclerView recyclerViewSavedDBs = findViewById(R.id.recyclerViewSavedDBs);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(savedDBs);
+        adapter = new RecyclerViewAdapter(databaseDetailsList);
 
-        // Set the adapter to the RecyclerView
         recyclerViewSavedDBs.setAdapter(adapter);
         recyclerViewSavedDBs.setLayoutManager(new LinearLayoutManager(this));
 
-        // Implement swipe-to-delete functionality using ItemTouchHelper
-        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback =
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                        return false;
+                    }
 
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // Remove the swiped item from the list
-                int position = viewHolder.getAdapterPosition();
-                savedDBs.remove(position);
-                adapter.notifyItemRemoved(position);
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        int position = viewHolder.getAdapterPosition();
+                        DatabaseDetails removedItem = databaseDetailsList.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        updateTinyDB(savedDBs, removedItem);
+                    }
+                };
 
-                // Save the updated list to TinyDB
-                tinyDB.putListString("savedDBs", savedDBs);
-            }
-        };
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerViewSavedDBs);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerViewSavedDBs);
-
-        // Set item click listener to start DisplayDetailsActivity
-        adapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                // Get the selected database details
-                String selectedDBDetails = savedDBs.get(position);
-
-                // Start DisplayDetailsActivity and pass the selected details
-                Intent intent = new Intent(DisplayDBsActivity.this, DisplayDetailsActivity.class);
-                intent.putExtra("selectedDBDetails", selectedDBDetails);
-                startActivity(intent);
-            }
+        adapter.setOnItemClickListener(position -> {
+            DatabaseDetails selectedDBDetails = databaseDetailsList.get(position);
+            Intent intent = new Intent(DisplayDBsActivity.this, DisplayDetailsActivity.class);
+            intent.putExtra("selectedDBDetails", selectedDBDetails);
+            startActivity(intent);
         });
+    }
+
+    private void updateTinyDB(ArrayList<String> savedDBs, DatabaseDetails removedItem) {
+        savedDBs.remove(removedItem.getIdentifyName() + "|" + removedItem.getUsername() + "|" +
+                removedItem.getDbName() + "|" + removedItem.getDbUser() + "|" +
+                removedItem.getDbPass() + "|" + removedItem.getDbHost() + "|" + removedItem.getDbPort());
+
+        tinyDB.putListString("savedDBs", savedDBs);
     }
 }
