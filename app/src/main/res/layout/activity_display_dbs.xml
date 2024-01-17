@@ -7,9 +7,9 @@
     android:padding="16dp"
     tools:context=".DisplayDBsActivity">
 
-    <ListView
-        android:id="@+id/listViewSavedDBs"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSavedDBs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
