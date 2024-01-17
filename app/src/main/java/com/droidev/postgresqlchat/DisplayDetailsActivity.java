@@ -97,7 +97,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
                 tinyDB.putString("dbHost", dbHostEditText.getText().toString());
                 tinyDB.putString("dbPort", dbPortEditText.getText().toString());
 
-                Toast.makeText(DisplayDetailsActivity.this, "Set Database to connect to: " + dbNameEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(DisplayDetailsActivity.this, "Set Database to connect to: " + identifyNameEditText.getText().toString(), Toast.LENGTH_SHORT).show();
 
                 DisplayDetailsActivity.this.finish();
             }

@@ -389,57 +389,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void deepLink(String link) {
-
-        EditText userName = new EditText(this);
-        userName.setHint("Insert your user name here");
-        userName.setInputType(InputType.TYPE_CLASS_TEXT);
-        userName.setMaxLines(1);
-
-        LinearLayout lay = new LinearLayout(this);
-        lay.setOrientation(LinearLayout.VERTICAL);
-        lay.addView(userName);
-
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setTitle("Login from Deeplink")
-                .setPositiveButton("Save", null)
-                .setNegativeButton("Cancel", null)
-                .setView(lay)
-                .show();
-
-        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-
-        positiveButton.setOnClickListener(v -> {
-
-            if (userName.getText().toString().isEmpty()) {
-
-                Toast.makeText(this, "User name cannot be empty.", Toast.LENGTH_SHORT).show();
-
-            } else if (userName.getText().toString().length() > 10) {
-
-                Toast.makeText(MainActivity.this, "User name cannot be bigger than 10 characters.", Toast.LENGTH_SHORT).show();
-            } else {
-
-                String[] linkArray = link.split("/");
-
-                tinyDB.putString("user", userName.getText().toString());
-                tinyDB.putString("dbName", linkArray[0]);
-                tinyDB.putString("dbUser", linkArray[1]);
-                tinyDB.putString("dbPass", linkArray[2]);
-                tinyDB.putString("dbHost", linkArray[3]);
-                tinyDB.putString("dbPort", linkArray[4]);
-
-                startUp();
-
-                dialog.dismiss();
-
-                Toast.makeText(MainActivity.this, "Saved.", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
-
     private void showAllMessages() {
 
         Intent intent = new Intent(this, ShowAllMessagesActivity.class);
