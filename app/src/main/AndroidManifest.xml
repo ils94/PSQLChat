@@ -21,6 +21,20 @@
         android:theme="@style/Theme.PostgreSQLChat"
         tools:targetApi="31">
         <activity
+            android:name=".DisplayDetailsActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".DisplayDBsActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".AddCredentialsActivity"
             android:exported="false">
             <meta-data
