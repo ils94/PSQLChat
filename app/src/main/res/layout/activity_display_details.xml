@@ -8,67 +8,67 @@
     tools:context=".DisplayDetailsActivity">
 
     <EditText
-        android:id="@+id/displayIdentifyName"
+        android:id="@+id/detailsDisplayIdentifyName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
         android:hint="Give a name to identify this database"
         android:inputType="text"
-        android:maxLines="1" />
+        android:maxLines="1"
+        tools:ignore="Autofill,HardcodedText" />
 
     <EditText
-        android:id="@+id/displayUserName"
+        android:id="@+id/detailsDisplayUserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
         android:hint="Your username"
         android:inputType="text"
-        android:maxLines="1" />
+        android:maxLines="1"
+        tools:ignore="Autofill,HardcodedText" />
 
     <EditText
-        android:id="@+id/displayDbName"
+        android:id="@+id/detailsDisplayDbName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
-        android:hint="DB Name"
+        android:hint="dbName"
         android:inputType="text"
-        android:maxLines="1" />
+        android:maxLines="1"
+        tools:ignore="Autofill,HardcodedText" />
 
     <EditText
-        android:id="@+id/displayDbUser"
+        android:id="@+id/detailsDisplayDbUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
-        android:hint="DB User"
+        android:hint="dbUser"
         android:inputType="text"
-        android:maxLines="1" />
+        android:maxLines="1"
+        tools:ignore="Autofill,HardcodedText" />
 
     <EditText
-        android:id="@+id/displayDbPass"
+        android:id="@+id/detailsDisplayDbPass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
-        android:hint="DB Pass"
+        android:hint="dbPass"
         android:inputType="text"
-        android:maxLines="1" />
+        android:maxLines="1"
+        tools:ignore="Autofill,HardcodedText" />
 
     <EditText
-        android:id="@+id/displayDbHost"
+        android:id="@+id/detailsDisplayDbHost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
-        android:hint="DB Host"
+        android:hint="dbHost"
         android:inputType="text"
-        android:maxLines="1" />
+        android:maxLines="1"
+        tools:ignore="Autofill,HardcodedText" />
 
     <EditText
-        android:id="@+id/displayDbPort"
+        android:id="@+id/detailsDisplayDbPort"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
-        android:hint="DB Port"
+        android:hint="dbPort"
         android:inputType="number"
-        android:maxLines="1" />
+        android:maxLines="1"
+        tools:ignore="Autofill,HardcodedText" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,23 +76,24 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnEdit"
+            android:id="@+id/detailsBtnEdit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Edit" />
+            android:text="Edit"
+            tools:ignore="HardcodedText" />
 
-        <!-- Add some space between the buttons -->
         <Space
             android:layout_width="16dp"
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/btnConnect"
+            android:id="@+id/detailsBtnConnect"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Connect" />
+            android:text="Connect"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
 </LinearLayout>

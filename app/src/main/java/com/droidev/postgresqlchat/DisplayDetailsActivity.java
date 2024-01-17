@@ -24,16 +24,18 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 
         String[] detailsArray = selectedDBDetails.split("\\|");
 
-        EditText identifyNameEditText = findViewById(R.id.displayIdentifyName);
-        EditText userNameEditText = findViewById(R.id.displayUserName);
-        EditText dbNameEditText = findViewById(R.id.displayDbName);
-        EditText dbUserEditText = findViewById(R.id.displayDbUser);
-        EditText dbPassEditText = findViewById(R.id.displayDbPass);
-        EditText dbHostEditText = findViewById(R.id.displayDbHost);
-        EditText dbPortEditText = findViewById(R.id.displayDbPort);
+        System.out.println("array: " + detailsArray[0]);
 
-        Button editButton = findViewById(R.id.btnEdit);
-        Button connectButton = findViewById(R.id.btnConnect);
+        EditText identifyNameEditText = findViewById(R.id.detailsDisplayIdentifyName);
+        EditText userNameEditText = findViewById(R.id.detailsDisplayUserName);
+        EditText dbNameEditText = findViewById(R.id.detailsDisplayDbName);
+        EditText dbUserEditText = findViewById(R.id.detailsDisplayDbUser);
+        EditText dbPassEditText = findViewById(R.id.detailsDisplayDbPass);
+        EditText dbHostEditText = findViewById(R.id.detailsDisplayDbHost);
+        EditText dbPortEditText = findViewById(R.id.detailsDisplayDbPort);
+
+        Button editButton = findViewById(R.id.detailsBtnEdit);
+        Button connectButton = findViewById(R.id.detailsBtnConnect);
 
         if (detailsArray.length == 7) {
             identifyNameEditText.setText(detailsArray[0]);

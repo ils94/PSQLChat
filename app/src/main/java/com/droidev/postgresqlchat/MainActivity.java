@@ -144,9 +144,15 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
 
-            case R.id.loginDB:
+            case R.id.chooseDB:
 
-                login();
+                chooseDB();
+
+                break;
+
+            case R.id.addDB:
+
+                addDB();
 
                 break;
 
@@ -318,106 +324,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    private void login() {
+    private void chooseDB() {
 
-        EditText user = new EditText(this);
-        user.setHint("User Name");
-        user.setInputType(InputType.TYPE_CLASS_TEXT);
-        user.setMaxLines(1);
+        Intent intent = new Intent(MainActivity.this, DisplayDBsActivity.class);
+        startActivity(intent);
+    }
 
-        EditText dbName = new EditText(this);
-        dbName.setHint("dbName");
-        dbName.setInputType(InputType.TYPE_CLASS_TEXT);
-        dbName.setMaxLines(1);
+    @SuppressLint("SetTextI18n")
+    private void addDB() {
 
-        EditText dbUser = new EditText(this);
-        dbUser.setHint("dbUser");
-        dbUser.setInputType(InputType.TYPE_CLASS_TEXT);
-        dbUser.setMaxLines(1);
-
-        EditText dbPass = new EditText(this);
-        dbPass.setHint("dbPass");
-        dbPass.setInputType(InputType.TYPE_CLASS_TEXT);
-        dbPass.setMaxLines(1);
-
-        EditText dbHost = new EditText(this);
-        dbHost.setHint("dbHost");
-        dbHost.setInputType(InputType.TYPE_CLASS_TEXT);
-        dbHost.setMaxLines(1);
-
-        EditText dbPort = new EditText(this);
-        dbPort.setHint("dbPort");
-        dbPort.setInputType(InputType.TYPE_CLASS_NUMBER);
-        dbPort.setMaxLines(1);
-
-        LinearLayout lay = new LinearLayout(this);
-        lay.setOrientation(LinearLayout.VERTICAL);
-        lay.addView(user);
-        lay.addView(dbName);
-        lay.addView(dbUser);
-        lay.addView(dbPass);
-        lay.addView(dbHost);
-        lay.addView(dbPort);
-
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setTitle("Insert user name and database credentials below:")
-                .setPositiveButton("Save", null)
-                .setNegativeButton("Cancel", null)
-                .setNeutralButton("Clear all", null)
-                .setView(lay)
-                .show();
-
-        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        Button neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-
-        user.setText(tinyDB.getString("user"));
-        dbName.setText(tinyDB.getString("dbName"));
-        dbUser.setText(tinyDB.getString("dbUser"));
-        dbPass.setText(tinyDB.getString("dbPass"));
-        dbHost.setText(tinyDB.getString("dbHost"));
-        dbPort.setText(tinyDB.getString("dbPort"));
-
-        if (dbPort.getText().toString().isEmpty()) {
-
-            dbPort.setText("5432");
-        }
-
-        positiveButton.setOnClickListener(v -> {
-
-            if (user.getText().toString().isEmpty() || dbName.getText().toString().isEmpty() || dbUser.getText().toString().isEmpty() || dbPass.getText().toString().isEmpty() || dbHost.getText().toString().isEmpty() || dbPort.getText().toString().isEmpty()) {
-
-                Toast.makeText(MainActivity.this, "Fields cannot be empty.", Toast.LENGTH_SHORT).show();
-
-            } else if (user.getText().toString().length() > 10) {
-
-                Toast.makeText(MainActivity.this, "User name cannot be bigger than 10 characters.", Toast.LENGTH_SHORT).show();
-            } else {
-
-                clearTinyDBKeys();
-
-                tinyDB.putString("user", user.getText().toString());
-                tinyDB.putString("dbName", dbName.getText().toString());
-                tinyDB.putString("dbUser", dbUser.getText().toString());
-                tinyDB.putString("dbPass", dbPass.getText().toString());
-                tinyDB.putString("dbHost", dbHost.getText().toString());
-                tinyDB.putString("dbPort", dbPort.getText().toString());
-
-                startUp();
-
-                dialog.dismiss();
-
-                Toast.makeText(MainActivity.this, "Saved.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        neutralButton.setOnClickListener(v -> {
-
-            dbName.setText("");
-            dbUser.setText("");
-            dbPass.setText("");
-            dbHost.setText("");
-        });
+        Intent intent = new Intent(MainActivity.this, AddCredentialsActivity.class);
+        startActivity(intent);
     }
 
     private void changeTextSize() {
