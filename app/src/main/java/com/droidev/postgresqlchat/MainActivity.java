@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
             String path = uri.toString();
 
-            if (path.contains("psqlchat")) {
+            if (path.contains("psqlchat.go")) {
 
                 Intent intent = new Intent(MainActivity.this, AddCredentialsActivity.class);
                 intent.putExtra("link", path.replace("https://psqlchat.go/", ""));
