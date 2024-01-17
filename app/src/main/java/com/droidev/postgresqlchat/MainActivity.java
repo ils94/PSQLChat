@@ -23,11 +23,14 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -485,10 +488,20 @@ public class MainActivity extends AppCompatActivity {
             ImgurUploader.uploadImage(this, Uri.parse(imagePath), imageUrl -> {
                 if (imageUrl != null) {
 
+                    View dialogView = getLayoutInflater().inflate(R.layout.custom_alert_dialog, null);
+                    ImageView imageView = dialogView.findViewById(R.id.imageView);
+
+                    int desiredWidth = 500;
+                    int desiredHeight = 500;
+                    imageView.setLayoutParams(new LinearLayout.LayoutParams(desiredWidth, desiredHeight));
+
+                    imageView.setImageURI(selectedImageUri);
+
                     AlertDialog dialog = new AlertDialog.Builder(this)
                             .setTitle("Send this image?")
                             .setPositiveButton("Yes", null)
                             .setNegativeButton("No", null)
+                            .setView(dialogView)
                             .show();
 
                     Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);

@@ -22,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ImgurUploader {
 
     private static final String IMGUR_API_BASE_URL = "https://api.imgur.com/3/";
-    private static final String IMGUR_CLIENT_ID = "API KEY"; // Replace with your Imgur API key
+    private static final String IMGUR_CLIENT_ID = "API KEY";
 
     public static void uploadImage(Context context, Uri imageUri, UploadCallback callback) {
         new UploadImageAsyncTask(context, imageUri, callback).execute();
