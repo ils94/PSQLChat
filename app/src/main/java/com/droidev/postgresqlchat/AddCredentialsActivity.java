@@ -2,7 +2,10 @@ package com.droidev.postgresqlchat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,8 +22,9 @@ public class AddCredentialsActivity extends AppCompatActivity {
     private EditText editTextDbHost;
     private EditText editTextDbPort;
     private Button saveButton;
-    TinyDB tinyDB;
-    String link;
+    private TinyDB tinyDB;
+    private String link;
+    private Menu menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,9 @@ public class AddCredentialsActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(view -> saveDBCredentials());
 
-        if (!link.isEmpty()) {
+        System.out.println("Erro: " + link);
+
+        if (link != null) {
 
             String[] linkArray = link.split("/");
 
@@ -97,5 +103,23 @@ public class AddCredentialsActivity extends AppCompatActivity {
         editTextDbPass.getText().clear();
         editTextDbHost.getText().clear();
         editTextDbPort.getText().clear();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.chooseDBMenu) {
+            Intent intent = new Intent(AddCredentialsActivity.this, DisplayDBsActivity.class);
+            startActivity(intent);
+            AddCredentialsActivity.this.finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_credentials_menu, menu);
+
+        menuItem = menu;
+
+        return super.onCreateOptionsMenu(menu);
     }
 }
