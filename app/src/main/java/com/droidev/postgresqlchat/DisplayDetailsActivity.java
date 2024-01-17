@@ -99,13 +99,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
             }
         });
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-            }
-        });
+        editButton.setOnClickListener(view -> updateTinyDB());
 
     }
 
@@ -134,11 +128,10 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         if (index != -1) {
 
             savedDBs.set(index, newValue);
-
-        } else {
-            System.out.println("Element not found in the list.");
         }
 
         tinyDB.putListString("savedDBs", savedDBs);
+
+        Toast.makeText(this, "Credentials updated.", Toast.LENGTH_SHORT).show();
     }
 }
