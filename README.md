@@ -6,7 +6,7 @@ PSQLChat is a simple Android application that uses PostgreSQL database as backen
 
 # Idea
 
-The idea behind this project is to give users a way to easy setup a backend and have a chat app of their own, where they have control of it. We live in a world where the most known message apps are controlled by big companies, and this app tries to add some kinda of decentralized power for people to communicate with each other through the internet.
+The idea behind this project is to give users a way to easy setup a backend and have a chat app of their own, where they have total control of it. We live in a world where the most known message apps are controlled by big companies, and this app tries to add some kinda of decentralized power for people to communicate with each other through the internet.
 
 ---
 
