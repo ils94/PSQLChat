@@ -49,9 +49,7 @@ CREATE TABLE IF NOT EXISTS CHAT (ID SERIAL PRIMARY KEY, USER_NAME VARCHAR(10) NO
 
 To be able to upload direct to https://imgur.com/ and post the image into the database, you need your API Key. To know how to get your own API Key, please, read this [documentation](https://apidocs.imgur.com/).
 
-Once you acquire your API Key, paste and save it: **Menu**, **Login...**, **Imgur API Key**, and click **SAVE**.
-
-Or when you try to upload an image to Imgur without the API Key set, it will prompt you to save your API Key.
+Once you acquire your API Key, paste and save it: **Menu - APIs - Imgur API Key**, and click **SAVE**.
 
 ---
 
