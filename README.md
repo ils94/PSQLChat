@@ -29,6 +29,8 @@ No webserver is necessary, just create yourself a PostgreSQL database, host it s
 - Show all database messages, and let you search messages within the database;
 - Turn on notifications and receive the last 10 messages sent to the database (may vary depending on the phone);
 - Share database link for easier login into the database;
+- Save multiple databases to quickly switch between them;
+- Edit saved databases;
 - Adjust font size.
 
 ---
@@ -56,3 +58,13 @@ Or when you try to upload an image to Imgur without the API Key set, it will pro
 # Download
 
 You can download the App from this [link](https://github.com/ils94/PSQLChat/releases/download/release/PSQLChat.apk).
+
+---
+
+# Free PostgreSQL Hosting Services
+
+If you are looking for a free and easy way to setup PostgreSQL database, I recommend using [ElephantSQL](https://customer.elephantsql.com/login).
+
+They offer up to 5 created databases for free, and up to 20mb maximum space for free for each database, which would be enough for this project, since PSQLChat only store Strings on the database table.
+
+20mb can store up to 20 millions characters in just one database!
