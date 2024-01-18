@@ -4,6 +4,6 @@
 
     <item
         android:id="@+id/addDBMenu"
-        android:title="Add Database's Credentials"
+        android:title="Save New Database"
         tools:ignore="HardcodedText" />
 </menu>

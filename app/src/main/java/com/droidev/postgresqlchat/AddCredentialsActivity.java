@@ -28,6 +28,8 @@ public class AddCredentialsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_credentials);
 
+        setTitle("Save New Database");
+
         tinyDB = new TinyDB(this);
 
         String link = getIntent().getStringExtra("link");

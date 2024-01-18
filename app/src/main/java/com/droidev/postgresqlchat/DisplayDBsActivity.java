@@ -27,6 +27,8 @@ public class DisplayDBsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_dbs);
 
+        setTitle("Saved Databases");
+
         tinyDB = new TinyDB(this);
         savedDBs = tinyDB.getListString("savedDBs");
         databaseDetailsList = new ArrayList<>();

@@ -11,17 +11,32 @@
         tools:ignore="HardcodedText" />
 
     <item
-        android:title="Credentials..."
+        android:title="Database..."
         tools:ignore="HardcodedText">
         <menu>
             <item
                 android:id="@+id/chooseDB"
-                android:title="Choose Database's Credentials"
+                android:title="Choose Database"
                 tools:ignore="HardcodedText" />
             <item
                 android:id="@+id/addDB"
-                android:title="Add Database's Credentials"
+                android:title="Save New Database"
                 tools:ignore="HardcodedText" />
+            <item
+                android:id="@+id/shareLink"
+                android:title="Share Database Link"
+                tools:ignore="HardcodedText" />
+            <item
+                android:id="@+id/showAllMessages"
+                android:title="Show all Database Messages"
+                tools:ignore="HardcodedText" />
+        </menu>
+    </item>
+
+    <item
+        android:title="APIs"
+        tools:ignore="HardcodedText">
+        <menu>
             <item
                 android:id="@+id/loginImgur"
                 android:title="Imgur API Key" />
@@ -35,25 +50,10 @@
         <menu>
             <item
                 android:id="@+id/notificationsON"
-                android:title="Turn on notifications" />
+                android:title="Notifications ON" />
             <item
                 android:id="@+id/notificationsOFF"
-                android:title="Turn off notifications" />
-        </menu>
-    </item>
-
-    <item
-        android:title="Database..."
-        tools:ignore="HardcodedText">
-        <menu>
-            <item
-                android:id="@+id/shareLink"
-                android:title="Share Database Link"
-                tools:ignore="HardcodedText" />
-            <item
-                android:id="@+id/showAllMessages"
-                android:title="Show all Database Messages"
-                tools:ignore="HardcodedText" />
+                android:title="Notifications OFF" />
         </menu>
     </item>
 

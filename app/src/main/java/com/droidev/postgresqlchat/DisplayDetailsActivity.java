@@ -33,6 +33,8 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_details);
 
+        setTitle("Database's Details");
+
         tinyDB = new TinyDB(this);
         savedDBs = tinyDB.getListString("savedDBs");
 
