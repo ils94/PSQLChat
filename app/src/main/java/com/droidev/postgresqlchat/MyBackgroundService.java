@@ -1,5 +1,6 @@
 package com.droidev.postgresqlchat;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -23,6 +25,7 @@ public class MyBackgroundService extends Service {
 
     private static final int NOTIFICATION_ID = 1;
     private static final String CHANNEL_ID = "PSQLChat Notifications";
+    private static boolean isServiceRunning = false;
 
     private Handler handler;
     private Runnable runnable;
@@ -34,26 +37,33 @@ public class MyBackgroundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        startForeground(NOTIFICATION_ID, createNotification());
+        if (!isServiceRunning) {
+            isServiceRunning = true;
 
-        handler = new Handler();
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                performRepeatedTask(MyBackgroundService.this);
+            startForeground(NOTIFICATION_ID, createNotification());
 
-                handler.postDelayed(this, 5000);
-            }
-        };
+            handler = new Handler();
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    performRepeatedTask(MyBackgroundService.this);
 
-        handler.post(runnable);
+                    handler.postDelayed(this, 5000);
+                }
+            };
+
+            handler.post(runnable);
+        }
 
         return START_STICKY;
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        isServiceRunning = false;
 
         if (handler != null) {
             handler.removeCallbacks(runnable);
@@ -98,7 +108,7 @@ public class MyBackgroundService extends Service {
                             messageBuilder.append(message).append("\n");
                         }
 
-                        showNotification(context, messageBuilder.toString());
+                        showNotification(context, tinyDB.getString("identifyName"), messageBuilder.toString());
                     }
                 }
             });
@@ -106,7 +116,7 @@ public class MyBackgroundService extends Service {
     }
 
 
-    private void showNotification(Context context, String content) {
+    private void showNotification(Context context, String title, String content) {
         MyApplication myApplication = (MyApplication) context.getApplicationContext();
 
         if (!myApplication.isAppInForeground()) {
@@ -116,7 +126,7 @@ public class MyBackgroundService extends Service {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("New Message(s)")
+                    .setContentTitle(title)
                     .setContentText(content)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setContentIntent(pendingIntent)
@@ -147,5 +157,22 @@ public class MyBackgroundService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         return builder.build();
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
+        restartServiceIntent.setPackage(getPackageName());
+
+        PendingIntent restartServicePendingIntent =
+                PendingIntent.getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_IMMUTABLE);
+
+        AlarmManager alarmService =
+                (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        assert alarmService != null;
+        alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, restartServicePendingIntent);
+
+        super.onTaskRemoved(rootIntent);
     }
 }
