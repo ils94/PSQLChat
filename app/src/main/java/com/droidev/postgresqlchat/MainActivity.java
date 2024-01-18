@@ -253,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         isAppRunning = false;
+        chat.setText("");
     }
 
     @Override
