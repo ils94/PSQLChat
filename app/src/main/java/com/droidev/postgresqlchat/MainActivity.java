@@ -90,38 +90,15 @@ public class MainActivity extends AppCompatActivity {
         send = findViewById(R.id.send);
         scrollView = findViewById(R.id.scrollview);
 
-        textToSend.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                send.setEnabled(s.toString().trim().length() != 0);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                send.setEnabled(s.toString().trim().length() != 0);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                send.setEnabled(s.toString().trim().length() != 0);
-            }
-        });
-
         textToSend.setOnEditorActionListener((v, actionId, event) -> {
-
             if (actionId == EditorInfo.IME_ACTION_SEND) {
-
                 sendText();
-
                 return true;
             }
-
             return false;
         });
 
         send.setOnClickListener(v -> sendText());
-
-        send.setEnabled(false);
 
         if (!tinyDB.getString("textSize").isEmpty()) {
 
@@ -278,13 +255,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        isAppRunning = false; // Set the flag to false when the app is stopped or minimized
+        isAppRunning = false;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        isAppRunning = false; // Set the flag to false when the app is destroyed
+        isAppRunning = false;
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
         }
@@ -293,8 +270,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        isAppRunning = true; // Set the flag to true when the app resumes
-        startUp(); // Restart the loop when the app comes back from minimized
+        isAppRunning = true;
+        startUp();
     }
 
     private void sendText() {
@@ -303,9 +280,9 @@ public class MainActivity extends AppCompatActivity {
 
             prepareToSendText(textToSend.getText().toString());
 
-        } else {
+            send.setEnabled(false);
 
-            Toast.makeText(this, "Message cannot be empty.", Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(() -> send.setEnabled(true), 3000);
         }
     }
 
@@ -506,7 +483,7 @@ public class MainActivity extends AppCompatActivity {
             positiveButton.setOnClickListener(v -> {
 
                 dialog.dismiss();
-                
+
                 ImgurUploader.uploadImage(this, Uri.parse(imagePath), imageUrl -> {
                     if (imageUrl != null) {
                         prepareToSendText(imageUrl.replace("i.imgur.com", "psqlchat.imgur.com"));
