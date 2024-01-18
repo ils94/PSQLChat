@@ -485,37 +485,37 @@ public class MainActivity extends AppCompatActivity {
 
             String imagePath = getImagePath(selectedImageUri);
 
-            ImgurUploader.uploadImage(this, Uri.parse(imagePath), imageUrl -> {
-                if (imageUrl != null) {
+            View dialogView = getLayoutInflater().inflate(R.layout.custom_alert_dialog, null);
+            ImageView imageView = dialogView.findViewById(R.id.imageView);
 
-                    View dialogView = getLayoutInflater().inflate(R.layout.custom_alert_dialog, null);
-                    ImageView imageView = dialogView.findViewById(R.id.imageView);
+            int desiredWidth = 500;
+            int desiredHeight = 500;
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(desiredWidth, desiredHeight));
 
-                    int desiredWidth = 500;
-                    int desiredHeight = 500;
-                    imageView.setLayoutParams(new LinearLayout.LayoutParams(desiredWidth, desiredHeight));
+            imageView.setImageURI(selectedImageUri);
 
-                    imageView.setImageURI(selectedImageUri);
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle("Send this image?")
+                    .setPositiveButton("Yes", null)
+                    .setNegativeButton("No", null)
+                    .setView(dialogView)
+                    .show();
 
-                    AlertDialog dialog = new AlertDialog.Builder(this)
-                            .setTitle("Send this image?")
-                            .setPositiveButton("Yes", null)
-                            .setNegativeButton("No", null)
-                            .setView(dialogView)
-                            .show();
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
 
-                    Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(v -> {
 
-                    positiveButton.setOnClickListener(v -> {
-
+                dialog.dismiss();
+                
+                ImgurUploader.uploadImage(this, Uri.parse(imagePath), imageUrl -> {
+                    if (imageUrl != null) {
                         prepareToSendText(imageUrl.replace("i.imgur.com", "psqlchat.imgur.com"));
-
-                        dialog.dismiss();
-                    });
-                }
+                    }
+                });
             });
         }
     }
+
 
     private String getImagePath(Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};

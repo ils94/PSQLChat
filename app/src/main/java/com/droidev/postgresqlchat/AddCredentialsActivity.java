@@ -76,7 +76,8 @@ public class AddCredentialsActivity extends AppCompatActivity {
 
         for (String savedDB : savedDBs) {
             String[] credentials = savedDB.split("\\|");
-            if (credentials.length >= 2 && credentials[0].equals(identifyName) || credentials[2].equals(dbName)) {
+
+            if (credentials[0].equals(identifyName)) {
 
                 Toast.makeText(this, "This database is already saved.", Toast.LENGTH_SHORT).show();
 
