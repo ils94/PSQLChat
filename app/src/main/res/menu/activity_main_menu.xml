@@ -38,7 +38,7 @@
         tools:ignore="HardcodedText">
         <menu>
             <item
-                android:id="@+id/loginImgur"
+                android:id="@+id/saveImgurAPIKey"
                 android:title="Imgur API Key" />
         </menu>
 

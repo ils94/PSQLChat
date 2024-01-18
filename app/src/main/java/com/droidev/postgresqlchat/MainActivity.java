@@ -135,9 +135,9 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
 
-            case R.id.loginImgur:
+            case R.id.saveImgurAPIKey:
 
-                saveImgurAPIKey();
+                saveImgurAPIKey(true);
 
                 break;
 
@@ -277,10 +277,6 @@ public class MainActivity extends AppCompatActivity {
         if (!textToSend.getText().toString().isEmpty()) {
 
             prepareToSendText(textToSend.getText().toString());
-
-            send.setEnabled(false);
-
-            new Handler().postDelayed(() -> send.setEnabled(true), 3000);
         }
     }
 
@@ -292,11 +288,11 @@ public class MainActivity extends AppCompatActivity {
 
             db.insertIntoChat(MainActivity.this, tinyDB.getString("user"), msg, chat, scrollView, autoScroll);
 
-            textToSend.setText("");
-
             resumeChatLoop();
 
             send.setEnabled(false);
+
+            new Handler().postDelayed(() -> send.setEnabled(true), 3000);
         } else {
 
             Toast.makeText(this, "No connection available.", Toast.LENGTH_SHORT).show();
@@ -442,7 +438,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (tinyDB.getString("ImgurAPI").isEmpty()) {
 
-            saveImgurAPIKey();
+            saveImgurAPIKey(false);
         } else {
 
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -530,7 +526,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void saveImgurAPIKey() {
+    public void saveImgurAPIKey(Boolean justSaving) {
 
         EditText key = new EditText(this);
         key.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -561,6 +557,11 @@ public class MainActivity extends AppCompatActivity {
                 tinyDB.putString("ImgurAPI", key.getText().toString().replace(" ", "").replace("\n", ""));
 
                 dialog.dismiss();
+
+                if (!justSaving) {
+
+                    pickImage();
+                }
             } else {
 
                 Toast.makeText(this, "Field cannot be empty.", Toast.LENGTH_SHORT).show();
