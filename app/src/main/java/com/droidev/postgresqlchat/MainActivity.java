@@ -177,10 +177,18 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.notificationsON:
 
-                String permission_storage = Manifest.permission.POST_NOTIFICATIONS;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
-                if (ContextCompat.checkSelfPermission(this, permission_storage) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{permission_storage}, 3);
+                    String permission_storage = Manifest.permission.POST_NOTIFICATIONS;
+
+                    if (ContextCompat.checkSelfPermission(this, permission_storage) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, new String[]{permission_storage}, 3);
+                    } else {
+
+                        restartBackgroundService();
+
+                        Toast.makeText(this, "Notifications ON.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
 
                     restartBackgroundService();
