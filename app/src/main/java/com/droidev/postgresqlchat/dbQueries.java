@@ -226,8 +226,6 @@ public class dbQueries {
 
     public void loadChatMethod(Activity activity, Connection connection, TextView textView, ScrollView scrollView, Boolean autoScroll) throws SQLException {
 
-        TinyDB tinyDB = new TinyDB(activity.getApplicationContext());
-
         String sql = "SELECT * FROM CHAT ORDER BY ID ASC LIMIT 1000";
 
         Statement stmt = connection.createStatement();
