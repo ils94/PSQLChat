@@ -2,6 +2,12 @@ package com.droidev.postgresqlchat;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -223,23 +229,27 @@ public class dbQueries {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
 
-        StringBuilder chatBuilder = new StringBuilder();
+        SpannableStringBuilder chatBuilder = new SpannableStringBuilder();
 
         while (rs.next()) {
             String user_name = rs.getString("USER_NAME");
             String user_message = rs.getString("USER_MESSAGE");
 
-            chatBuilder.append(user_name).append(": ").append(user_message).append("\n");
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(user_name + ": " + user_message);
+
+            spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.BLACK), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            chatBuilder.append(spannableStringBuilder).append("\n");
         }
 
         rs.close();
         stmt.close();
 
         activity.runOnUiThread(() -> {
-            textView.setText(chatBuilder.toString());
+            Spanned spannedText = SpannableStringBuilder.valueOf(chatBuilder);
+            textView.setText(spannedText);
 
             if (autoScroll) {
-
                 scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_DOWN));
             }
         });
