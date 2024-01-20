@@ -3,11 +3,11 @@ package com.droidev.postgresqlchat;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Spannable;
-import android.text.SpannableString;
+import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -88,6 +88,8 @@ public class dbQueries {
 
                 if (connection != null) {
 
+                    TinyDB tinyDB = new TinyDB(activity.getApplicationContext());
+
                     PreparedStatement pst;
 
                     String sql = "SELECT * FROM CHAT WHERE USER_NAME ILIKE ? OR USER_MESSAGE ILIKE ? ORDER BY ID ASC";
@@ -99,20 +101,34 @@ public class dbQueries {
 
                     ResultSet rs = pst.executeQuery();
 
-                    StringBuilder chatBuilder = new StringBuilder();
+                    SpannableStringBuilder chatBuilder = new SpannableStringBuilder();
 
                     while (rs.next()) {
-
                         String user_name = rs.getString("USER_NAME");
                         String user_message = rs.getString("USER_MESSAGE");
 
-                        chatBuilder.append(user_name).append(": ").append(user_message).append("\n");
+                        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(user_name + ": " + user_message);
+
+                        if (user_name.equals(tinyDB.getString("user"))) {
+
+                            spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.BLUE), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        } else {
+
+                            spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.RED), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
+
+                        spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        chatBuilder.append(spannableStringBuilder).append("\n");
                     }
 
                     rs.close();
                     pst.close();
 
-                    activity.runOnUiThread(() -> textView.setText(chatBuilder.toString()));
+                    activity.runOnUiThread(() -> {
+                        Spanned spannedText = SpannableStringBuilder.valueOf(chatBuilder);
+                        textView.setText(spannedText);
+                    });
                 }
             } catch (SQLException e) {
                 activity.runOnUiThread(() ->
@@ -224,6 +240,8 @@ public class dbQueries {
 
     public void loadChatMethod(Activity activity, Connection connection, TextView textView, ScrollView scrollView, Boolean autoScroll) throws SQLException {
 
+        TinyDB tinyDB = new TinyDB(activity.getApplicationContext());
+
         String sql = "SELECT * FROM CHAT ORDER BY ID ASC LIMIT 1000";
 
         Statement stmt = connection.createStatement();
@@ -237,7 +255,15 @@ public class dbQueries {
 
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(user_name + ": " + user_message);
 
-            spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.BLACK), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (user_name.equals(tinyDB.getString("user"))) {
+
+                spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.BLUE), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else {
+
+                spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.RED), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             chatBuilder.append(spannableStringBuilder).append("\n");
         }

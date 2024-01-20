@@ -43,6 +43,7 @@ public class ShowAllMessagesActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.searchMessage) {
             EditText search = new EditText(this);
             search.setInputType(InputType.TYPE_CLASS_TEXT);
+            search.setHint("Leave blank to load all messages");
             search.setMaxLines(1);
 
             LinearLayout lay = new LinearLayout(this);
