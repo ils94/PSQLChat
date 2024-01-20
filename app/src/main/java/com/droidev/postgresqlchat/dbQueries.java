@@ -54,7 +54,7 @@ public class dbQueries {
 
             try {
 
-                connection = connectDB(activity);
+                connection = connectDB(activity.getApplicationContext());
 
                 if (connection != null) {
 
@@ -84,7 +84,7 @@ public class dbQueries {
 
             try {
 
-                connection = connectDB(activity);
+                connection = connectDB(activity.getApplicationContext());
 
                 if (connection != null) {
 
@@ -139,7 +139,7 @@ public class dbQueries {
 
             try {
 
-                connection = connectDB(activity);
+                connection = connectDB(activity.getApplicationContext());
 
                 if (connection != null) {
 
@@ -185,7 +185,7 @@ public class dbQueries {
 
             try {
 
-                connection = connectDB(context);
+                connection = connectDB(context.getApplicationContext());
 
                 if (connection != null) {
 
