@@ -88,8 +88,6 @@ public class dbQueries {
 
                 if (connection != null) {
 
-                    TinyDB tinyDB = new TinyDB(activity.getApplicationContext());
-
                     PreparedStatement pst;
 
                     String sql = "SELECT * FROM CHAT WHERE USER_NAME ILIKE ? OR USER_MESSAGE ILIKE ? ORDER BY ID ASC";
@@ -107,19 +105,7 @@ public class dbQueries {
                         String user_name = rs.getString("USER_NAME");
                         String user_message = rs.getString("USER_MESSAGE");
 
-                        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(user_name + ": " + user_message);
-
-                        if (user_name.equals(tinyDB.getString("user"))) {
-
-                            spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.BLUE), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        } else {
-
-                            spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.RED), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-
-                        spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                        chatBuilder.append(spannableStringBuilder).append("\n");
+                        chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, user_message)).append("\n");
                     }
 
                     rs.close();
@@ -253,19 +239,7 @@ public class dbQueries {
             String user_name = rs.getString("USER_NAME");
             String user_message = rs.getString("USER_MESSAGE");
 
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(user_name + ": " + user_message);
-
-            if (user_name.equals(tinyDB.getString("user"))) {
-
-                spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.BLUE), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            } else {
-
-                spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.RED), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-
-            spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            chatBuilder.append(spannableStringBuilder).append("\n");
+            chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, user_message)).append("\n");
         }
 
         rs.close();
@@ -279,5 +253,24 @@ public class dbQueries {
                 scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_DOWN));
             }
         });
+    }
+
+    public SpannableStringBuilder textStylized(Context context, String user_name, String user_message) {
+
+        TinyDB tinyDB = new TinyDB(context);
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(user_name + ": " + user_message);
+
+        if (user_name.equals(tinyDB.getString("user"))) {
+
+            spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.BLUE), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } else {
+
+            spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.RED), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannableStringBuilder;
     }
 }
