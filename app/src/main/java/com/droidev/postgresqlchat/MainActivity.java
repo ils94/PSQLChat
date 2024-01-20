@@ -292,6 +292,8 @@ public class MainActivity extends AppCompatActivity {
 
             send.setEnabled(false);
 
+            textToSend.setText("");
+
             new Handler().postDelayed(() -> send.setEnabled(true), 3000);
         } else {
 
