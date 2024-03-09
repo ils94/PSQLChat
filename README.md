@@ -39,7 +39,7 @@ No web server is necessary; just create a PostgreSQL database, host it somewhere
 
 **create a table with this command:**
 
-CREATE TABLE IF NOT EXISTS CHAT (ID SERIAL PRIMARY KEY, USER_NAME VARCHAR(10) NOT NULL, USER_MESSAGE VARCHAR NOT NULL)
+create table if not exists chat (id serial primary key, user_name varchar(10) not null, user_message varchar not null)
 
 *By default, only the last 1000 rows will be displayed. The reason is that as the database grows, selecting and displaying more rows in the client may decrease performance over time. There is a way to select all messages from the database using the option in the app menu.*
 
