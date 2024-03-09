@@ -61,8 +61,4 @@ You can download the App from this [link](https://github.com/ils94/PSQLChat/rele
 
 # Free PostgreSQL Hosting Services
 
-If you are looking for a free and easy way to set up a PostgreSQL database, I recommend using [ElephantSQL](https://customer.elephantsql.com/login).
-
-They offer up to 5 created databases for free, with a maximum space of up to 20MB for each database, which is sufficient for this project since PSQLChat only stores strings in the database table.
-
-20MB can store up to 20 million characters in just one database!
+If you are looking for a free and easy way to set up a PostgreSQL database, I recommend using [alwaysdata](https://www.alwaysdata.com/en/register/).
