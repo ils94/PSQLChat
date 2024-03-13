@@ -30,6 +30,11 @@
                 android:id="@+id/showAllMessages"
                 android:title="Show all Database Messages"
                 tools:ignore="HardcodedText" />
+
+            <item
+                android:id="@+id/encryptKey"
+                android:title="Generate Encrypt Key"
+                tools:ignore="HardcodedText" />
         </menu>
     </item>
 

@@ -21,6 +21,8 @@ public class AddCredentialsActivity extends AppCompatActivity {
     private EditText editTextDbPass;
     private EditText editTextDbHost;
     private EditText editTextDbPort;
+
+    private EditText editTextEncryptKey;
     private TinyDB tinyDB;
 
     @Override
@@ -41,6 +43,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
         editTextDbPass = findViewById(R.id.editTextDbPass);
         editTextDbHost = findViewById(R.id.editTextDbHost);
         editTextDbPort = findViewById(R.id.editTextDbPort);
+        editTextEncryptKey = findViewById(R.id.editTextEncryptKey);
         Button saveButton = findViewById(R.id.saveButton);
 
         saveButton.setOnClickListener(view -> saveDBCredentials());
@@ -69,6 +72,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
         String dbPass = editTextDbPass.getText().toString();
         String dbHost = editTextDbHost.getText().toString();
         String dbPort = editTextDbPort.getText().toString();
+        String encryptKey = editTextEncryptKey.getText().toString();
 
         if (identifyName.isEmpty() || userName.isEmpty() || dbName.isEmpty() ||
                 dbUser.isEmpty() || dbPass.isEmpty() || dbHost.isEmpty() || dbPort.isEmpty()) {
@@ -88,7 +92,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
         }
 
         String credentialsDB = identifyName + "|" + userName + "|" + dbName + "|" +
-                dbUser + "|" + dbPass + "|" + dbHost + "|" + dbPort;
+                dbUser + "|" + dbPass + "|" + dbHost + "|" + dbPort + "|" + encryptKey;
 
         savedDBs.add(credentialsDB);
 
@@ -103,6 +107,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
         editTextDbPass.getText().clear();
         editTextDbHost.getText().clear();
         editTextDbPort.getText().clear();
+        editTextEncryptKey.getText().clear();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

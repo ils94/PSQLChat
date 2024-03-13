@@ -70,6 +70,14 @@
         android:maxLines="1"
         tools:ignore="Autofill,HardcodedText" />
 
+    <EditText
+        android:id="@+id/detailsDisplayEncryptKey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Encrypt Key"
+        android:maxLines="1"
+        tools:ignore="Autofill,HardcodedText" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

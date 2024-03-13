@@ -175,6 +175,12 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
 
+            case R.id.encryptKey:
+
+                generateKey();
+
+                break;
+
             case R.id.notificationsON:
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -376,6 +382,12 @@ public class MainActivity extends AppCompatActivity {
     private void showAllMessages() {
 
         Intent intent = new Intent(this, ShowAllMessagesActivity.class);
+        startActivity(intent);
+    }
+
+    private void generateKey() {
+
+        Intent intent = new Intent(this, generateEncryptKeyActivity.class);
         startActivity(intent);
     }
 
