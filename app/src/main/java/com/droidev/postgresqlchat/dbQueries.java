@@ -90,12 +90,9 @@ public class dbQueries {
 
                     PreparedStatement pst;
 
-                    String sql = "SELECT * FROM CHAT WHERE USER_NAME ILIKE ? OR USER_MESSAGE ILIKE ? ORDER BY ID ASC";
+                    String sql = "SELECT * FROM CHAT ORDER BY ID ASC";
 
                     pst = connection.prepareStatement(sql);
-
-                    pst.setString(1, "%" + string + "%");
-                    pst.setString(2, "%" + string + "%");
 
                     ResultSet rs = pst.executeQuery();
 
@@ -105,7 +102,12 @@ public class dbQueries {
                         String user_name = rs.getString("USER_NAME");
                         String user_message = rs.getString("USER_MESSAGE");
 
-                        chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, user_message)).append("\n");
+                        String messageDecrypted = decryptMessage(activity, user_message);
+
+                        if (messageDecrypted.contains(string)) {
+
+                            chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, messageDecrypted)).append("\n");
+                        }
                     }
 
                     rs.close();

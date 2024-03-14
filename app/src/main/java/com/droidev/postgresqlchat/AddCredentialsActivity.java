@@ -59,6 +59,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
             editTextDbPass.setText(linkArray[2]);
             editTextDbHost.setText(linkArray[3]);
             editTextDbPort.setText(linkArray[4]);
+            editTextEncryptKey.setText(linkArray[5]);
         }
     }
 
