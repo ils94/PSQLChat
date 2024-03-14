@@ -21,9 +21,6 @@
         android:theme="@style/Theme.PostgreSQLChat"
         tools:targetApi="31">
         <activity
-            android:name=".generateEncryptKeyActivity"
-            android:exported="false" />
-        <activity
             android:name=".DisplayDetailsActivity"
             android:exported="false">
             <meta-data
@@ -60,7 +57,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -72,12 +70,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                    android:host="psqlchat.go"
-                    android:scheme="https" />
-                <data
-                    android:host="psqlchat.imgur.com"
-                    android:scheme="https" />
+                <data android:scheme="https"/>
+                <data android:host="psqlchat.go"/>
+                <data android:scheme="https"/>
+                <data android:host="psqlchat.imgur.com"/>
             </intent-filter>
         </activity>
     </application>

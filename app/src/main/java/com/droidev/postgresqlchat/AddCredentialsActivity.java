@@ -1,7 +1,9 @@
 package com.droidev.postgresqlchat;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,7 +23,6 @@ public class AddCredentialsActivity extends AppCompatActivity {
     private EditText editTextDbPass;
     private EditText editTextDbHost;
     private EditText editTextDbPort;
-
     private EditText editTextEncryptKey;
     private TinyDB tinyDB;
 
@@ -48,18 +49,32 @@ public class AddCredentialsActivity extends AppCompatActivity {
         Button saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(view -> saveDBCredentials());
 
-        System.out.println("Erro: " + link);
+        Button generateEncryptKeyButton = findViewById(R.id.generateEncryptKeyButton);
+        generateEncryptKeyButton.setOnClickListener(view -> generateEncryptKey());
 
         if (link != null) {
 
             String[] linkArray = link.split("/");
 
-            editTextDbName.setText(linkArray[0]);
-            editTextDbUser.setText(linkArray[1]);
-            editTextDbPass.setText(linkArray[2]);
-            editTextDbHost.setText(linkArray[3]);
-            editTextDbPort.setText(linkArray[4]);
-            editTextEncryptKey.setText(linkArray[5]);
+            if (linkArray.length == 6) {
+
+                editTextDbName.setText(linkArray[0]);
+                editTextDbUser.setText(linkArray[1]);
+                editTextDbPass.setText(linkArray[2]);
+                editTextDbHost.setText(linkArray[3]);
+                editTextDbPort.setText(linkArray[4]);
+                editTextEncryptKey.setText(linkArray[5]);
+            } else if (linkArray.length == 5) {
+
+                editTextDbName.setText(linkArray[0]);
+                editTextDbUser.setText(linkArray[1]);
+                editTextDbPass.setText(linkArray[2]);
+                editTextDbHost.setText(linkArray[3]);
+                editTextDbPort.setText(linkArray[4]);
+            } else {
+
+                Toast.makeText(this, "Link is invalid.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -125,5 +140,35 @@ public class AddCredentialsActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.add_credentials_menu, menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void generateEncryptKey() {
+
+        EncryptUtils encryptUtils = new EncryptUtils();
+
+        String key;
+
+        try {
+            key = encryptUtils.generateKey();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        if (!editTextEncryptKey.getText().toString().isEmpty()) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Generate a new Encrypt Key? You will lose your current Key permanently, and won't be able to Decrypt messages that were Encrypted with that Key.");
+            builder.setPositiveButton("Yes", (dialog, id) -> {
+
+                editTextEncryptKey.setText(key);
+            });
+
+            builder.setNegativeButton("No", (dialog, id) -> dialog.cancel());
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+
+        editTextEncryptKey.setText(key);
     }
 }

@@ -105,4 +105,12 @@
             tools:ignore="HardcodedText" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/detailsBtnGenerateEncryptKey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Generate Encrypt Key"
+        tools:ignore="HardcodedText" />
+
 </LinearLayout>
