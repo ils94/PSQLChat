@@ -1,8 +1,10 @@
 package com.droidev.postgresqlchat;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +13,9 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 
@@ -126,13 +131,26 @@ public class AddCredentialsActivity extends AppCompatActivity {
         editTextEncryptKey.getText().clear();
     }
 
+    @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.chooseDBMenu) {
-            Intent intent = new Intent(AddCredentialsActivity.this, DisplayDBsActivity.class);
-            startActivity(intent);
-            AddCredentialsActivity.this.finish();
+        switch (item.getItemId()) {
+
+            case R.id.chooseDBMenu:
+
+                Intent intent = new Intent(AddCredentialsActivity.this, DisplayDBsActivity.class);
+                startActivity(intent);
+                AddCredentialsActivity.this.finish();
+
+                break;
+
+            case R.id.scanCode:
+
+                startQRCodeScanner();
+
+                break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -170,6 +188,44 @@ public class AddCredentialsActivity extends AppCompatActivity {
         } else {
 
             editTextEncryptKey.setText(key);
+        }
+    }
+
+
+    private void startQRCodeScanner() {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setOrientationLocked(true);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+        integrator.setPrompt("Scan the Credentials QR Code");
+        integrator.initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+
+                String scannedResult = result.getContents();
+
+                Toast.makeText(this, "Scanned: " + scannedResult, Toast.LENGTH_SHORT).show();
+
+                String[] contents = scannedResult.split("/");
+
+                identifyNameEditText.setText(contents[0]);
+                editTextDbName.setText(contents[1]);
+                editTextDbUser.setText(contents[2]);
+                editTextDbPass.setText(contents[3]);
+                editTextDbHost.setText(contents[4]);
+                editTextDbPort.setText(contents[5]);
+                editTextEncryptKey.setText(contents[6]);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
