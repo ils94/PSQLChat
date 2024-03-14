@@ -14,7 +14,7 @@ The idea behind this project is to provide users with an easy way to set up a ba
 
 The app runs in loops to check for new messages (local threads created) and performs basic select and insert operations into the database.
 
-No web server is necessary; just create a PostgreSQL database, host it somewhere, and provide users with the database credentials. This leads to an insecure database, but the entire idea of this project is to make everything easier to set up!
+No web server is necessary; just create a PostgreSQL database, host it somewhere, and provide users with the database credentials. This leads to an insecure database, but the entire idea of this project is to make everything easier to set up! If you are more advanced, you can create an user that has SELECT and INSERT permissions only.
 
 ---
 
