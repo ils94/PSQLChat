@@ -11,7 +11,9 @@ public class DatabaseDetails implements Serializable {
     private final String dbHost;
     private final String dbPort;
 
-    public DatabaseDetails(String identifyName, String username, String dbName, String dbUser, String dbPass, String dbHost, String dbPort) {
+    private final String dbEncryptKey;
+
+    public DatabaseDetails(String identifyName, String username, String dbName, String dbUser, String dbPass, String dbHost, String dbPort, String dbEncryptKey) {
         this.identifyName = identifyName;
         this.username = username;
         this.dbName = dbName;
@@ -19,6 +21,7 @@ public class DatabaseDetails implements Serializable {
         this.dbPass = dbPass;
         this.dbHost = dbHost;
         this.dbPort = dbPort;
+        this.dbEncryptKey = dbEncryptKey;
     }
 
     public String getIdentifyName() {
@@ -47,6 +50,10 @@ public class DatabaseDetails implements Serializable {
 
     public String getDbPort() {
         return dbPort;
+    }
+
+    public String getDbEcryptKey() {
+        return dbEncryptKey;
     }
 }
 

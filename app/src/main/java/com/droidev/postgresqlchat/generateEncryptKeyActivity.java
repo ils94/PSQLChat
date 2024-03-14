@@ -35,11 +35,9 @@ public class generateEncryptKeyActivity extends AppCompatActivity {
         buttonGenerate.setOnClickListener(view -> {
 
             try {
-
-                textViewEncryptKey.setText(encryptUtils.generateSecretKey());
-            } catch (NoSuchAlgorithmException e) {
-
-                Toast.makeText(generateEncryptKeyActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                textViewEncryptKey.setText(encryptUtils.generateKey());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         });
 

@@ -28,6 +28,8 @@ public class DisplayDetailsActivity extends AppCompatActivity {
     private EditText dbHostEditText;
     private EditText dbPortEditText;
 
+    private EditText dbEncryptKeyEditText;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         String dbPass = selectedDBDetails.getDbPass();
         String dbHost = selectedDBDetails.getDbHost();
         String dbPort = selectedDBDetails.getDbPort();
+        String dbEncryptKey = selectedDBDetails.getDbEcryptKey();
 
         identifyNameEditText = findViewById(R.id.detailsDisplayIdentifyName);
         userNameEditText = findViewById(R.id.detailsDisplayUserName);
@@ -55,6 +58,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         dbPassEditText = findViewById(R.id.detailsDisplayDbPass);
         dbHostEditText = findViewById(R.id.detailsDisplayDbHost);
         dbPortEditText = findViewById(R.id.detailsDisplayDbPort);
+        dbEncryptKeyEditText = findViewById(R.id.detailsDisplayEncryptKey);
 
         Button editButton = findViewById(R.id.detailsBtnEdit);
         Button connectButton = findViewById(R.id.detailsBtnConnect);
@@ -66,6 +70,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         dbPassEditText.setText(dbPass);
         dbHostEditText.setText(dbHost);
         dbPortEditText.setText(dbPort);
+        dbEncryptKeyEditText.setText(dbEncryptKey);
 
         current = (identifyNameEditText.getText().toString()
                 + "|" + userNameEditText.getText().toString()
@@ -73,7 +78,8 @@ public class DisplayDetailsActivity extends AppCompatActivity {
                 + "|" + dbUserEditText.getText().toString()
                 + "|" + dbPassEditText.getText().toString()
                 + "|" + dbHostEditText.getText().toString()
-                + "|" + dbPortEditText.getText().toString());
+                + "|" + dbPortEditText.getText().toString()
+                + "|" + dbEncryptKeyEditText.getText().toString());
 
         connectButton.setOnClickListener(view -> {
 
@@ -101,6 +107,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
                 tinyDB.putString("dbPass", dbPassEditText.getText().toString());
                 tinyDB.putString("dbHost", dbHostEditText.getText().toString());
                 tinyDB.putString("dbPort", dbPortEditText.getText().toString());
+                tinyDB.putString("encryptKey", dbEncryptKeyEditText.getText().toString());
 
                 Toast.makeText(DisplayDetailsActivity.this, "Set database's credentials to connect to: " + identifyNameEditText.getText().toString() + ".", Toast.LENGTH_SHORT).show();
 
@@ -120,6 +127,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         tinyDB.remove("dbPass");
         tinyDB.remove("dbHost");
         tinyDB.remove("dbPort");
+        tinyDB.remove("encryptKey");
     }
 
     private void updateTinyDB() {
@@ -130,7 +138,8 @@ public class DisplayDetailsActivity extends AppCompatActivity {
                 + "|" + dbUserEditText.getText().toString()
                 + "|" + dbPassEditText.getText().toString()
                 + "|" + dbHostEditText.getText().toString()
-                + "|" + dbPortEditText.getText().toString());
+                + "|" + dbPortEditText.getText().toString()
+                + "|" + dbEncryptKeyEditText.getText().toString());
 
         int index = savedDBs.indexOf(current);
 

@@ -44,8 +44,8 @@ public class AddCredentialsActivity extends AppCompatActivity {
         editTextDbHost = findViewById(R.id.editTextDbHost);
         editTextDbPort = findViewById(R.id.editTextDbPort);
         editTextEncryptKey = findViewById(R.id.editTextEncryptKey);
-        Button saveButton = findViewById(R.id.saveButton);
 
+        Button saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(view -> saveDBCredentials());
 
         System.out.println("Erro: " + link);

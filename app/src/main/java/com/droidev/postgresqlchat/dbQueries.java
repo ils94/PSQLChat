@@ -137,6 +137,16 @@ public class dbQueries {
         new Thread(() -> {
             Connection connection = null;
 
+            String encryptedMessage = encryptMessage(activity, user_message);
+
+            if (encryptedMessage.isEmpty()) {
+
+                activity.runOnUiThread(() ->
+                        Toast.makeText(activity.getBaseContext(), "Can't encrypt, fault key.", Toast.LENGTH_SHORT).show());
+
+                return;
+            }
+
             try {
 
                 connection = connectDB(activity.getApplicationContext());
@@ -150,7 +160,7 @@ public class dbQueries {
                     pst = connection.prepareStatement(sql);
 
                     pst.setString(1, user_name);
-                    pst.setString(2, user_message);
+                    pst.setString(2, encryptedMessage);
 
                     pst.executeUpdate();
 
@@ -270,5 +280,12 @@ public class dbQueries {
         spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, user_name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return spannableStringBuilder;
+    }
+
+    public String encryptMessage(Context context, String string) {
+        TinyDB tinyDB = new TinyDB(context);
+        EncryptUtils encryptUtils = new EncryptUtils();
+
+        return encryptUtils.encrypt(string, tinyDB.getString("encryptKey"));
     }
 }

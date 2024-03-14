@@ -12,28 +12,39 @@ import java.util.Base64;
 public class EncryptUtils {
     private static final String ALGORITHM = "AES";
 
-    public static String generateKey() throws Exception {
+    public String generateKey() throws Exception {
         KeyGenerator keyGenerator = KeyGenerator.getInstance(ALGORITHM);
         keyGenerator.init(256);
         SecretKey secretKey = keyGenerator.generateKey();
         return Base64.getEncoder().encodeToString(secretKey.getEncoded());
     }
 
-    public static String encrypt(String data, Key key) throws Exception {
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        byte[] encryptedBytes = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
-        return Base64.getEncoder().encodeToString(encryptedBytes);
+    public String encrypt(String data, String key) {
+        try {
+
+            SecretKey secretKey = convertStringToKey(key);
+
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] encryptedBytes = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(encryptedBytes);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
-    public static String decrypt(String encryptedData, String key) throws Exception {
+    public String decrypt(String encryptedData, String key) {
+        try {
 
-        SecretKey secretKey = convertStringToKey(key);
+            SecretKey secretKey = convertStringToKey(key);
 
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
-        return new String(decryptedBytes, StandardCharsets.UTF_8);
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
+            return new String(decryptedBytes, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            return "Can't decrypt, wrong key.";
+        }
     }
 
     public static SecretKey convertStringToKey(String keyString) {
