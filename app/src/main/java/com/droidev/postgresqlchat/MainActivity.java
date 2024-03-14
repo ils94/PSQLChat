@@ -3,6 +3,7 @@ package com.droidev.postgresqlchat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -13,6 +14,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private boolean isAppRunning = true;
+
+    private String link;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,24 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.shareLink:
 
-                if (tinyDB.getString("dbName").isEmpty()) {
-
-                    Toast.makeText(this, "There are no credentials saved yet.", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    String link = "https://psqlchat.go/"
-                            + tinyDB.getString("dbName")
-                            + "/" + tinyDB.getString("dbUser")
-                            + "/" + tinyDB.getString("dbPass")
-                            + "/" + tinyDB.getString("dbHost")
-                            + "/" + tinyDB.getString("dbPort")
-                            + "/" + tinyDB.getString("encryptKey");
-
-                    Intent shareLinkIntent = new Intent(Intent.ACTION_SEND);
-                    shareLinkIntent.setType("text/plain");
-                    shareLinkIntent.putExtra(Intent.EXTRA_TEXT, link);
-                    startActivity(Intent.createChooser(shareLinkIntent, "Share link with..."));
-                }
+                shareDBLink();
 
                 break;
 
@@ -576,4 +564,70 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void shareDBLink() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setMessage("Warning: Sharing the link along with the Encryption Key could potentially enable unauthorized individuals to decrypt your database messages. Ensure that you share the link with the Encryption Key through a secure method, and only with someone you trust.");
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View dialogView = inflater.inflate(R.layout.radio_dialog_layout, null);
+        builder.setView(dialogView);
+
+        RadioGroup radioGroup = dialogView.findViewById(R.id.radio_group);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radio_button1:
+
+                        if (tinyDB.getString("dbName").isEmpty()) {
+
+                            Toast.makeText(MainActivity.this, "There are no credentials saved yet.", Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            link = "https://psqlchat.go/"
+                                    + tinyDB.getString("dbName")
+                                    + "/" + tinyDB.getString("dbUser")
+                                    + "/" + tinyDB.getString("dbPass")
+                                    + "/" + tinyDB.getString("dbHost")
+                                    + "/" + tinyDB.getString("dbPort")
+                                    + "/" + tinyDB.getString("encryptKey");
+                        }
+
+                        break;
+                    case R.id.radio_button2:
+
+                        if (tinyDB.getString("dbName").isEmpty()) {
+
+                            Toast.makeText(MainActivity.this, "There are no credentials saved yet.", Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            link = "https://psqlchat.go/"
+                                    + tinyDB.getString("dbName")
+                                    + "/" + tinyDB.getString("dbUser")
+                                    + "/" + tinyDB.getString("dbPass")
+                                    + "/" + tinyDB.getString("dbHost")
+                                    + "/" + tinyDB.getString("dbPort");
+                        }
+
+                        break;
+                }
+            }
+        });
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+
+            Intent shareLinkIntent = new Intent(Intent.ACTION_SEND);
+            shareLinkIntent.setType("text/plain");
+            shareLinkIntent.putExtra(Intent.EXTRA_TEXT, link);
+            startActivity(Intent.createChooser(shareLinkIntent, "Share link with..."));
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }
