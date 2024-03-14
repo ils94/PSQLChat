@@ -29,9 +29,11 @@ No web server is necessary; just create a PostgreSQL database, host it somewhere
 - Show all database messages and allow searching within the database.
 - Turn on notifications and receive the last 10 messages sent to the database (may vary depending on the phone).
 - Share the database link for easier login.
+- Generate a QR Code for an easier and secure way to share database credentials.
 - Save multiple databases to quickly switch between them.
 - Edit saved databases.
 - Adjust font size.
+- Message Encryptation and Decryptation using AES256.
 
 ---
 
@@ -50,6 +52,13 @@ create table if not exists chat (id serial primary key, user_name varchar(10) no
 To upload directly to https://imgur.com/ and post the image into the database, you need your API Key. Learn how to get your API Key by reading this [documentation](https://apidocs.imgur.com/).
 
 Once you acquire your API Key, paste and save it: **Menu - APIs - Imgur API Key**. Paste or type your API Key in the field, and click **SAVE**.
+
+---
+# Message Encryptation/Decryptation
+
+Before inserting a message into the database, you must possess an encryption key. You can generate one when saving a new database, but it is crucial that everyone in the chat has this key. Otherwise, you won't be able to decrypt each other's messages.
+
+This feature provides a basic encryption/decryption mechanism to ensure the security of messages stored in the database, protecting them from unauthorized access.
 
 ---
 
