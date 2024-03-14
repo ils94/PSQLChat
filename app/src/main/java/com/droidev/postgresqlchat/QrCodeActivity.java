@@ -2,6 +2,7 @@ package com.droidev.postgresqlchat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.google.zxing.common.BitMatrix;
 
 public class QrCodeActivity extends AppCompatActivity {
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +25,12 @@ public class QrCodeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String dbCredentials = intent.getStringExtra("dbCredentials");
 
+        assert dbCredentials != null;
+        String [] contents = dbCredentials.split("/");
+
         ImageView imageView = findViewById(R.id.imageView);
+
+        setTitle(contents[0]);
 
         try {
             Bitmap bitmap = generateQRCode(dbCredentials);
