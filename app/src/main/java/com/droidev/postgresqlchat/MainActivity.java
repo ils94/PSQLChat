@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                             + "/" + tinyDB.getString("dbPass")
                             + "/" + tinyDB.getString("dbHost")
                             + "/" + tinyDB.getString("dbPort")
-                            + "/" + tinyDB.getString("dbEncryptKey");
+                            + "/" + tinyDB.getString("encryptKey");
 
                     Intent shareLinkIntent = new Intent(Intent.ACTION_SEND);
                     shareLinkIntent.setType("text/plain");

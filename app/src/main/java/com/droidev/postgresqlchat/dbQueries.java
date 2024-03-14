@@ -213,7 +213,9 @@ public class dbQueries {
                         String user_name = rs.getString("USER_NAME");
                         String user_message = rs.getString("USER_MESSAGE");
 
-                        chatBuilder.append(ID).append("@").append(user_name).append(": ").append(user_message);
+                        String messageDecrypted = decryptMessage(context, user_message);
+
+                        chatBuilder.append(ID).append("@").append(user_name).append(": ").append(messageDecrypted);
                     }
 
                     rs.close();
