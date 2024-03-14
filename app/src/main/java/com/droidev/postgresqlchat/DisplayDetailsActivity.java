@@ -92,7 +92,8 @@ public class DisplayDetailsActivity extends AppCompatActivity {
                     || dbUserEditText.getText().toString().isEmpty()
                     || dbPassEditText.getText().toString().isEmpty()
                     || dbHostEditText.getText().toString().isEmpty()
-                    || dbPortEditText.getText().toString().isEmpty()) {
+                    || dbPortEditText.getText().toString().isEmpty()
+                    || dbEncryptKeyEditText.toString().isEmpty()) {
 
                 Toast.makeText(DisplayDetailsActivity.this, "Fields cannot be empty.", Toast.LENGTH_SHORT).show();
 
@@ -142,14 +143,25 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         builder.setMessage("Save changes?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
 
-            String newValue = (identifyNameEditText.getText().toString()
-                    + "|" + userNameEditText.getText().toString()
-                    + "|" + dbNameEditText.getText().toString()
-                    + "|" + dbUserEditText.getText().toString()
-                    + "|" + dbPassEditText.getText().toString()
-                    + "|" + dbHostEditText.getText().toString()
-                    + "|" + dbPortEditText.getText().toString()
-                    + "|" + dbEncryptKeyEditText.getText().toString());
+            String identifyName = identifyNameEditText.getText().toString();
+            String userName = userNameEditText.getText().toString();
+            String dbName = dbNameEditText.getText().toString();
+            String dbUser = dbUserEditText.getText().toString();
+            String dbPass = dbPassEditText.getText().toString();
+            String dbHost = dbHostEditText.getText().toString();
+            String dbPort = dbPortEditText.getText().toString();
+            String encryptKey = dbEncryptKeyEditText.getText().toString();
+
+            String[] fields = {identifyName, userName, dbName, dbUser, dbPass, dbHost, dbPort, encryptKey};
+
+            for (String field : fields) {
+                if (field.isEmpty()) {
+                    Toast.makeText(this, "Fields cannot be empty.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            String newValue = identifyName + "|" + userName + "|" + dbName + "|" + dbUser + "|" + dbPass + "|" + dbHost + "|" + dbPort + "|" + encryptKey;
 
             int index = savedDBs.indexOf(current);
 

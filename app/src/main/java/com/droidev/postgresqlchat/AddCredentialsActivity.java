@@ -1,11 +1,6 @@
 package com.droidev.postgresqlchat;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,6 +8,10 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -95,10 +94,13 @@ public class AddCredentialsActivity extends AppCompatActivity {
         String dbPort = editTextDbPort.getText().toString();
         String encryptKey = editTextEncryptKey.getText().toString();
 
-        if (identifyName.isEmpty() || userName.isEmpty() || dbName.isEmpty() ||
-                dbUser.isEmpty() || dbPass.isEmpty() || dbHost.isEmpty() || dbPort.isEmpty()) {
-            Toast.makeText(this, "Fields cannot be empty.", Toast.LENGTH_SHORT).show();
-            return;
+        String[] fields = {identifyName, userName, dbName, dbUser, dbPass, dbHost, dbPort, encryptKey};
+
+        for (String field : fields) {
+            if (field.isEmpty()) {
+                Toast.makeText(this, "Fields cannot be empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
         for (String savedDB : savedDBs) {
@@ -176,10 +178,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Do you want to generate a new Encryption Key? You will lose your current Key permanently, and won't be able to Decrypt messages that were Encrypted with that Key.");
-            builder.setPositiveButton("Yes", (dialog, id) -> {
-
-                editTextEncryptKey.setText(key);
-            });
+            builder.setPositiveButton("Yes", (dialog, id) -> editTextEncryptKey.setText(key));
 
             builder.setNegativeButton("No", (dialog, id) -> dialog.cancel());
 
