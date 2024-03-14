@@ -11,4 +11,9 @@
         android:id="@+id/addDB2"
         android:title="Save New Database"
         tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/qrCode"
+        android:title="Generate QR Code"
+        tools:ignore="HardcodedText" />
 </menu>

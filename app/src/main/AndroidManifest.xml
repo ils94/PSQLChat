@@ -21,6 +21,9 @@
         android:theme="@style/Theme.PostgreSQLChat"
         tools:targetApi="31">
         <activity
+            android:name=".QrCodeActivity"
+            android:exported="false" />
+        <activity
             android:name=".DisplayDetailsActivity"
             android:exported="false">
             <meta-data
@@ -70,10 +73,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="https"/>
-                <data android:host="psqlchat.go"/>
-                <data android:scheme="https"/>
-                <data android:host="psqlchat.imgur.com"/>
+                <data android:scheme="https" />
+                <data android:host="psqlchat.go" />
+                <data android:scheme="https" />
+                <data android:host="psqlchat.imgur.com" />
             </intent-filter>
         </activity>
     </application>

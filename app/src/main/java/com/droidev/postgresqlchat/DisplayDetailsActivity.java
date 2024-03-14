@@ -189,6 +189,23 @@ public class DisplayDetailsActivity extends AppCompatActivity {
                 DisplayDetailsActivity.this.finish();
 
                 break;
+
+            case R.id.qrCode:
+
+                String dbCredentials = identifyNameEditText.getText().toString()
+                        + "/" + dbNameEditText.getText().toString()
+                        + "/" + dbUserEditText.getText().toString()
+                        + "/" + dbPassEditText.getText().toString()
+                        + "/" + dbHostEditText.getText().toString()
+                        + "/" + dbPortEditText.getText().toString()
+                        + "/" + dbEncryptKeyEditText.getText().toString();
+
+                Intent intent3 = new Intent(DisplayDetailsActivity.this, QrCodeActivity.class);
+                intent3.putExtra("dbCredentials", dbCredentials);
+                startActivity(intent3);
+                DisplayDetailsActivity.this.finish();
+
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
