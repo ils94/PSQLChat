@@ -142,7 +142,7 @@ public class dbQueries {
             if (encryptedMessage.isEmpty()) {
 
                 activity.runOnUiThread(() ->
-                        Toast.makeText(activity.getBaseContext(), "Can't encrypt, fault key.", Toast.LENGTH_SHORT).show());
+                        Toast.makeText(activity.getBaseContext(), "Can't encrypt message, fault key.", Toast.LENGTH_SHORT).show());
 
                 return;
             }
@@ -247,7 +247,9 @@ public class dbQueries {
             String user_name = rs.getString("USER_NAME");
             String user_message = rs.getString("USER_MESSAGE");
 
-            chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, user_message)).append("\n");
+            String messageDecrypted = decryptMessage(activity, user_message);
+
+            chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, messageDecrypted)).append("\n");
         }
 
         rs.close();
@@ -287,5 +289,13 @@ public class dbQueries {
         EncryptUtils encryptUtils = new EncryptUtils();
 
         return encryptUtils.encrypt(string, tinyDB.getString("encryptKey"));
+    }
+
+    public String decryptMessage(Context context, String string) {
+
+        TinyDB tinyDB = new TinyDB(context);
+        EncryptUtils encryptUtils = new EncryptUtils();
+
+        return encryptUtils.decrypt(string, tinyDB.getString("encryptKey"));
     }
 }

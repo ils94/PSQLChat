@@ -426,11 +426,7 @@ public class MainActivity extends AppCompatActivity {
     private void startBackgroundService() {
         Intent serviceIntent = new Intent(this, MyBackgroundService.class);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(serviceIntent);
-        } else {
-            startService(serviceIntent);
-        }
+        startForegroundService(serviceIntent);
     }
 
     private void stopBackgroundService() {
