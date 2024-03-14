@@ -1,6 +1,7 @@
 package com.droidev.postgresqlchat;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -63,6 +65,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 
         Button editButton = findViewById(R.id.detailsBtnEdit);
         Button connectButton = findViewById(R.id.detailsBtnConnect);
+        Button encryptionKeyButton = findViewById(R.id.detailsBtnGenerateEncryptKey);
 
         identifyNameEditText.setText(identifyName);
         userNameEditText.setText(userName);
@@ -118,6 +121,8 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 
         editButton.setOnClickListener(view -> updateTinyDB());
 
+        encryptionKeyButton.setOnClickListener(view -> generateEncryptKey());
+
     }
 
     private void clearTinyDBKeys() {
@@ -133,25 +138,35 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 
     private void updateTinyDB() {
 
-        String newValue = (identifyNameEditText.getText().toString()
-                + "|" + userNameEditText.getText().toString()
-                + "|" + dbNameEditText.getText().toString()
-                + "|" + dbUserEditText.getText().toString()
-                + "|" + dbPassEditText.getText().toString()
-                + "|" + dbHostEditText.getText().toString()
-                + "|" + dbPortEditText.getText().toString()
-                + "|" + dbEncryptKeyEditText.getText().toString());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setMessage("Save changes?");
+        builder.setPositiveButton("Yes", (dialog, id) -> {
 
-        int index = savedDBs.indexOf(current);
+            String newValue = (identifyNameEditText.getText().toString()
+                    + "|" + userNameEditText.getText().toString()
+                    + "|" + dbNameEditText.getText().toString()
+                    + "|" + dbUserEditText.getText().toString()
+                    + "|" + dbPassEditText.getText().toString()
+                    + "|" + dbHostEditText.getText().toString()
+                    + "|" + dbPortEditText.getText().toString()
+                    + "|" + dbEncryptKeyEditText.getText().toString());
 
-        if (index != -1) {
+            int index = savedDBs.indexOf(current);
 
-            savedDBs.set(index, newValue);
-        }
+            if (index != -1) {
 
-        tinyDB.putListString("savedDBs", savedDBs);
+                savedDBs.set(index, newValue);
+            }
 
-        Toast.makeText(this, "Credentials updated.", Toast.LENGTH_SHORT).show();
+            tinyDB.putListString("savedDBs", savedDBs);
+
+            Toast.makeText(DisplayDetailsActivity.this, "Credentials updated.", Toast.LENGTH_SHORT).show();
+        });
+        builder.setNegativeButton("No", (dialog, id) -> dialog.cancel());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -182,5 +197,33 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.display_details_menu, menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void generateEncryptKey() {
+
+        EncryptUtils encryptUtils = new EncryptUtils();
+
+        String key;
+
+        try {
+            key = encryptUtils.generateKey();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        if (!dbEncryptKeyEditText.getText().toString().isEmpty()) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Do you want to generate a new Encryption Key? You will lose your current Key permanently, and won't be able to Decrypt messages that were Encrypted with that Key.");
+            builder.setPositiveButton("Yes", (dialog, id) -> dbEncryptKeyEditText.setText(key));
+
+            builder.setNegativeButton("No", (dialog, id) -> dialog.cancel());
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else {
+
+            dbEncryptKeyEditText.setText(key);
+        }
     }
 }

@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -564,7 +565,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("NonConstantResourceId")
     public void shareDBLink() {
+
+        linkNoKey();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
@@ -575,45 +579,34 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(dialogView);
 
         RadioGroup radioGroup = dialogView.findViewById(R.id.radio_group);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.radio_button1:
 
-                        if (tinyDB.getString("dbName").isEmpty()) {
+        RadioButton radioButton2 = dialogView.findViewById(R.id.radio_button2);
+        radioButton2.setChecked(true);
 
-                            Toast.makeText(MainActivity.this, "There are no credentials saved yet.", Toast.LENGTH_SHORT).show();
-                        } else {
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case R.id.radio_button1:
 
-                            link = "https://psqlchat.go/"
-                                    + tinyDB.getString("dbName")
-                                    + "/" + tinyDB.getString("dbUser")
-                                    + "/" + tinyDB.getString("dbPass")
-                                    + "/" + tinyDB.getString("dbHost")
-                                    + "/" + tinyDB.getString("dbPort")
-                                    + "/" + tinyDB.getString("encryptKey");
-                        }
+                    if (tinyDB.getString("dbName").isEmpty()) {
 
-                        break;
-                    case R.id.radio_button2:
+                        Toast.makeText(MainActivity.this, "There are no credentials saved yet.", Toast.LENGTH_SHORT).show();
+                    } else {
 
-                        if (tinyDB.getString("dbName").isEmpty()) {
+                        linkWithKey();
+                    }
 
-                            Toast.makeText(MainActivity.this, "There are no credentials saved yet.", Toast.LENGTH_SHORT).show();
-                        } else {
+                    break;
+                case R.id.radio_button2:
 
-                            link = "https://psqlchat.go/"
-                                    + tinyDB.getString("dbName")
-                                    + "/" + tinyDB.getString("dbUser")
-                                    + "/" + tinyDB.getString("dbPass")
-                                    + "/" + tinyDB.getString("dbHost")
-                                    + "/" + tinyDB.getString("dbPort");
-                        }
+                    if (tinyDB.getString("dbName").isEmpty()) {
 
-                        break;
-                }
+                        Toast.makeText(MainActivity.this, "There are no credentials saved yet.", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        linkNoKey();
+                    }
+
+                    break;
             }
         });
 
@@ -629,5 +622,26 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void linkNoKey() {
+
+        link = "https://psqlchat.go/"
+                + tinyDB.getString("dbName")
+                + "/" + tinyDB.getString("dbUser")
+                + "/" + tinyDB.getString("dbPass")
+                + "/" + tinyDB.getString("dbHost")
+                + "/" + tinyDB.getString("dbPort");
+    }
+
+    public void linkWithKey() {
+
+        link = "https://psqlchat.go/"
+                + tinyDB.getString("dbName")
+                + "/" + tinyDB.getString("dbUser")
+                + "/" + tinyDB.getString("dbPass")
+                + "/" + tinyDB.getString("dbHost")
+                + "/" + tinyDB.getString("dbPort")
+                + "/" + tinyDB.getString("encryptKey");
     }
 }

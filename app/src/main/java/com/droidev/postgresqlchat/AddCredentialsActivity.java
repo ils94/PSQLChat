@@ -157,7 +157,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
         if (!editTextEncryptKey.getText().toString().isEmpty()) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Generate a new Encrypt Key? You will lose your current Key permanently, and won't be able to Decrypt messages that were Encrypted with that Key.");
+            builder.setMessage("Do you want to generate a new Encryption Key? You will lose your current Key permanently, and won't be able to Decrypt messages that were Encrypted with that Key.");
             builder.setPositiveButton("Yes", (dialog, id) -> {
 
                 editTextEncryptKey.setText(key);
@@ -167,8 +167,9 @@ public class AddCredentialsActivity extends AppCompatActivity {
 
             AlertDialog dialog = builder.create();
             dialog.show();
-        }
+        } else {
 
-        editTextEncryptKey.setText(key);
+            editTextEncryptKey.setText(key);
+        }
     }
 }
