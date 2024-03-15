@@ -33,7 +33,7 @@ No web server is necessary; just create a PostgreSQL database, host it somewhere
 - Save multiple databases to quickly switch between them.
 - Edit saved databases.
 - Adjust font size.
-- Message Encryptation and Decryptation using AES256.
+- Message Encryptation and Decryptation using AES-256.
 - Able to setup a password to lock the app's chat.
 - Filter out the Decrypt errors from the chat.
 
