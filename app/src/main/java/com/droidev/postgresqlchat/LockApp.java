@@ -180,7 +180,7 @@ public class LockApp {
     public void dismissLoginDialog() {
         if (alertDialog != null && alertDialog.isShowing()) {
             alertDialog.dismiss();
-            alertDialog = null; // Destroy the AlertDialog object
+            alertDialog = null;
         }
     }
 
@@ -201,11 +201,9 @@ public class LockApp {
                 .setView(lay)
                 .setTitle("Input your Password")
                 .setPositiveButton("Ok", null)
-                .setNegativeButton("Cancel", null)
                 .show();
 
         Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        Button negativeButton = alertDialog.getButton((AlertDialog.BUTTON_NEGATIVE));
 
         positiveButton.setOnClickListener(v -> {
 
@@ -217,13 +215,7 @@ public class LockApp {
                 callback.onLoginResult(true);
             } else {
                 Toast.makeText(context, "Wrong Password.", Toast.LENGTH_SHORT).show();
-                callback.onLoginResult(false);
             }
-        });
-
-        negativeButton.setOnClickListener(v -> {
-            alertDialog.dismiss();
-            callback.onLoginResult(false);
         });
     }
 

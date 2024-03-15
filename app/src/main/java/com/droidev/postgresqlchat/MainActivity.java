@@ -125,8 +125,6 @@ public class MainActivity extends AppCompatActivity {
                 if (success) {
                     isAppRunning = true;
                     startUp();
-                } else {
-                    MainActivity.this.finish();
                 }
             });
 
@@ -307,6 +305,7 @@ public class MainActivity extends AppCompatActivity {
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
         }
+        lockApp.dismissLoginDialog();
     }
 
     @Override
