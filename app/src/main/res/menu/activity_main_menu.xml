@@ -59,6 +59,23 @@
     </item>
 
     <item
+        android:title="Security"
+        tools:ignore="HardcodedText">
+        <menu>
+            <item
+                android:id="@+id/lockApp"
+                android:title="Enable App Lock" />
+            <item
+                android:id="@+id/resetPassword"
+                android:title="Reset App Lock Password" />
+
+            <item
+                android:id="@+id/removeAppLock"
+                android:title="Remove App Lock" />
+        </menu>
+    </item>
+
+    <item
         android:id="@+id/changeTextSize"
         android:title="Change Text Size"
         tools:ignore="HardcodedText" />

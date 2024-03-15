@@ -3,7 +3,6 @@ package com.droidev.postgresqlchat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -59,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String link;
 
+    LockApp lockApp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
         tinyDB = new TinyDB(this);
 
+        lockApp = new LockApp();
+
         chat = findViewById(R.id.chat);
         textToSend = findViewById(R.id.textToSend);
         send = findViewById(R.id.send);
@@ -107,9 +110,32 @@ public class MainActivity extends AppCompatActivity {
 
             chat.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(tinyDB.getString("textSize")));
         }
-
-        startUp();
     }
+
+    public void checkPassword() {
+
+        TinyDB tinyDB = new TinyDB(MainActivity.this);
+
+        chat.setText("");
+        setTitle("");
+
+        if (!tinyDB.getString("password").isEmpty()) {
+
+            lockApp.login(MainActivity.this, success -> {
+                if (success) {
+                    isAppRunning = true;
+                    startUp();
+                } else {
+                    MainActivity.this.finish();
+                }
+            });
+
+        } else {
+            isAppRunning = true;
+            startUp();
+        }
+    }
+
 
     private void openWebView(String url) {
         Intent intent = new Intent(this, WebViewActivity.class);
@@ -196,6 +222,24 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
 
+            case R.id.lockApp:
+
+                lockApp.createPassword(MainActivity.this);
+
+                break;
+
+            case R.id.resetPassword:
+
+                lockApp.changePassword(MainActivity.this);
+
+                break;
+
+            case R.id.removeAppLock:
+
+                lockApp.removeLock(MainActivity.this);
+
+                break;
+
             case R.id.uploadImage:
 
                 String permission_notification = Manifest.permission.READ_MEDIA_IMAGES;
@@ -252,6 +296,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         isAppRunning = false;
         chat.setText("");
+        lockApp.dismissLoginDialog();
+        checkPassword();
     }
 
     @Override
@@ -266,8 +312,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        isAppRunning = true;
-        startUp();
+        lockApp.dismissLoginDialog();
+        checkPassword();
     }
 
     private void sendText() {
