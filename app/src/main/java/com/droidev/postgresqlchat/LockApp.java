@@ -16,13 +16,22 @@ public class LockApp {
 
         TinyDB tinyDB = new TinyDB(context);
 
+        String hasPassword = tinyDB.getString("password");
+
+        if (!hasPassword.isEmpty()) {
+
+            Toast.makeText(context, "There is a password already.", Toast.LENGTH_SHORT).show();
+
+            return;
+        }
+
         EditText pass1 = new EditText(context);
         pass1.setHint("Input your Password");
-        pass1.setInputType(InputType.TYPE_CLASS_TEXT);
+        pass1.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         EditText pass2 = new EditText(context);
         pass2.setHint("Confirm your Password");
-        pass2.setInputType(InputType.TYPE_CLASS_TEXT);
+        pass2.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         LinearLayout lay = new LinearLayout(context);
         lay.setOrientation(LinearLayout.VERTICAL);
@@ -71,7 +80,7 @@ public class LockApp {
 
         EditText pass1 = new EditText(context);
         pass1.setHint("Input your Password");
-        pass1.setInputType(InputType.TYPE_CLASS_TEXT);
+        pass1.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         LinearLayout lay = new LinearLayout(context);
         lay.setOrientation(LinearLayout.VERTICAL);
@@ -79,7 +88,7 @@ public class LockApp {
 
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setCancelable(false)
-                .setTitle("Remove lock")
+                .setTitle("Remove App Lock")
                 .setView(lay)
                 .setPositiveButton("Ok", null)
                 .setNegativeButton("Cancel", null)
@@ -119,15 +128,15 @@ public class LockApp {
 
         EditText pass1 = new EditText(context);
         pass1.setHint("Old Password");
-        pass1.setInputType(InputType.TYPE_CLASS_TEXT);
+        pass1.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         EditText pass2 = new EditText(context);
         pass2.setHint("New Password");
-        pass2.setInputType(InputType.TYPE_CLASS_TEXT);
+        pass2.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         EditText pass3 = new EditText(context);
         pass3.setHint("Confirm new Password");
-        pass3.setInputType(InputType.TYPE_CLASS_TEXT);
+        pass3.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         LinearLayout lay = new LinearLayout(context);
         lay.setOrientation(LinearLayout.VERTICAL);
@@ -190,7 +199,7 @@ public class LockApp {
 
         EditText pass1 = new EditText(context);
         pass1.setHint("Input your Password");
-        pass1.setInputType(InputType.TYPE_CLASS_TEXT);
+        pass1.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         LinearLayout lay = new LinearLayout(context);
         lay.setOrientation(LinearLayout.VERTICAL);
@@ -198,8 +207,8 @@ public class LockApp {
 
         alertDialog = new AlertDialog.Builder(context)
                 .setCancelable(false)
+                .setTitle("App Lock")
                 .setView(lay)
-                .setTitle("Input your Password")
                 .setPositiveButton("Ok", null)
                 .show();
 
@@ -214,6 +223,7 @@ public class LockApp {
                 alertDialog.dismiss();
                 callback.onLoginResult(true);
             } else {
+                pass1.setText("");
                 Toast.makeText(context, "Wrong Password.", Toast.LENGTH_SHORT).show();
             }
         });

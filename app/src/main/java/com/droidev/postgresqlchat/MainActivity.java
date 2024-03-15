@@ -42,23 +42,17 @@ public class MainActivity extends AppCompatActivity {
     private EditText textToSend;
     private Button send;
     private ScrollView scrollView;
-
     private Boolean autoScroll = true;
-
     private Handler handler;
     private final int delay = 5000;
-
     Menu menuItem;
-
     private TinyDB tinyDB;
-
     private static final int PICK_IMAGE_REQUEST = 1;
-
     private boolean isAppRunning = true;
-
     private String link;
-
     LockApp lockApp;
+
+    public static Boolean unlocked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,13 +117,18 @@ public class MainActivity extends AppCompatActivity {
 
             lockApp.login(MainActivity.this, success -> {
                 if (success) {
+
+                    unlocked = true;
                     isAppRunning = true;
+
                     startUp();
                 }
             });
 
         } else {
+
             isAppRunning = true;
+
             startUp();
         }
     }
@@ -292,27 +291,37 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+
         isAppRunning = false;
         chat.setText("");
-        lockApp.dismissLoginDialog();
-        checkPassword();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         isAppRunning = false;
+
         if (handler != null) {
+
             handler.removeCallbacksAndMessages(null);
         }
-        lockApp.dismissLoginDialog();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        lockApp.dismissLoginDialog();
-        checkPassword();
+
+        isAppRunning = true;
+
+        if (!unlocked) {
+
+            lockApp.dismissLoginDialog();
+            checkPassword();
+        } else {
+
+            startUp();
+        }
     }
 
     private void sendText() {
