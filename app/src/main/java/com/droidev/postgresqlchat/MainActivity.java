@@ -232,8 +232,30 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.removeAppLock:
-
                 lockApp.removeLock(MainActivity.this);
+
+                break;
+
+            case R.id.hideDecryptError:
+
+                String hide = tinyDB.getString("hideError");
+
+                if (hide.equals("ON")) {
+
+                    hide = "OFF";
+
+                    Toast.makeText(this, "Decrypt errors will now be shown.", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    hide = "ON";
+
+                    Toast.makeText(this, "Decrypt errors are now hidden.", Toast.LENGTH_SHORT).show();
+                }
+
+                tinyDB.remove("hideError");
+
+                tinyDB.putString("hideError", hide);
 
                 break;
 
@@ -475,6 +497,11 @@ public class MainActivity extends AppCompatActivity {
     public void startUp() {
 
         tinyDB.remove("receivedMSGs");
+
+        if (tinyDB.getString("hideError").isEmpty()) {
+
+            tinyDB.putString("hideError", "OFF");
+        }
 
         if (!tinyDB.getString("dbName").isEmpty()) {
 

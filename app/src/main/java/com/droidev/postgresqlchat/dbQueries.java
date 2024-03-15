@@ -88,6 +88,8 @@ public class dbQueries {
 
                 if (connection != null) {
 
+                    TinyDB tinyDB = new TinyDB(activity);
+
                     PreparedStatement pst;
 
                     String sql = "SELECT * FROM CHAT ORDER BY ID ASC";
@@ -102,11 +104,23 @@ public class dbQueries {
                         String user_name = rs.getString("USER_NAME");
                         String user_message = rs.getString("USER_MESSAGE");
 
-                        String messageDecrypted = decryptMessage(activity, user_message);
+                        String messageDecrypted = decryptMessage(user_message, tinyDB.getString("encryptKey"));
 
-                        if (messageDecrypted.toLowerCase().contains(string.toLowerCase()) || user_name.toLowerCase().contains(string.toLowerCase())) {
+                        boolean b = messageDecrypted.toLowerCase().contains(string.toLowerCase()) || user_name.toLowerCase().contains(string.toLowerCase());
 
-                            chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, messageDecrypted)).append("\n");
+                        if (!tinyDB.getString("hideError").equals("ON")) {
+
+                            if (b) {
+
+                                chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, messageDecrypted)).append("\n");
+                            }
+
+                        } else if (tinyDB.getString("hideError").equals("ON") && !messageDecrypted.equals("Can't decrypt message, wrong key.")) {
+
+                            if (b) {
+
+                                chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, messageDecrypted)).append("\n");
+                            }
                         }
                     }
 
@@ -139,7 +153,9 @@ public class dbQueries {
         new Thread(() -> {
             Connection connection = null;
 
-            String encryptedMessage = encryptMessage(activity, user_message);
+            TinyDB tinyDB = new TinyDB(activity);
+
+            String encryptedMessage = encryptMessage(user_message, tinyDB.getString("encryptKey"));
 
             if (encryptedMessage.isEmpty()) {
 
@@ -201,6 +217,8 @@ public class dbQueries {
 
                 if (connection != null) {
 
+                    TinyDB tinyDB = new TinyDB(context);
+
                     String sql = "SELECT * FROM CHAT ORDER BY ID DESC LIMIT 1";
 
                     Statement stmt = connection.createStatement();
@@ -213,9 +231,16 @@ public class dbQueries {
                         String user_name = rs.getString("USER_NAME");
                         String user_message = rs.getString("USER_MESSAGE");
 
-                        String messageDecrypted = decryptMessage(context, user_message);
+                        String messageDecrypted = decryptMessage(user_message, tinyDB.getString("encryptKey"));
 
-                        chatBuilder.append(ID).append("@").append(user_name).append(": ").append(messageDecrypted);
+                        if (!tinyDB.getString("hideError").equals("ON")) {
+
+                            chatBuilder.append(ID).append("@").append(user_name).append(": ").append(messageDecrypted);
+
+                        } else if (tinyDB.getString("hideError").equals("ON") && !messageDecrypted.equals("Can't decrypt message, wrong key.")) {
+
+                            chatBuilder.append(ID).append("@").append(user_name).append(": ").append(messageDecrypted);
+                        }
                     }
 
                     rs.close();
@@ -240,6 +265,8 @@ public class dbQueries {
 
     public void loadChatMethod(Activity activity, Connection connection, TextView textView, ScrollView scrollView, Boolean autoScroll) throws SQLException {
 
+        TinyDB tinyDB = new TinyDB(activity);
+
         String sql = "SELECT * FROM CHAT ORDER BY ID ASC LIMIT 1000";
 
         Statement stmt = connection.createStatement();
@@ -251,9 +278,16 @@ public class dbQueries {
             String user_name = rs.getString("USER_NAME");
             String user_message = rs.getString("USER_MESSAGE");
 
-            String messageDecrypted = decryptMessage(activity, user_message);
+            String messageDecrypted = decryptMessage(user_message, tinyDB.getString("encryptKey"));
 
-            chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, messageDecrypted)).append("\n");
+            if (!tinyDB.getString("hideError").equals("ON")) {
+
+                chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, messageDecrypted)).append("\n");
+
+            } else if (tinyDB.getString("hideError").equals("ON") && !messageDecrypted.equals("Can't decrypt message, wrong key.")) {
+
+                chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, messageDecrypted)).append("\n");
+            }
         }
 
         rs.close();
@@ -288,18 +322,17 @@ public class dbQueries {
         return spannableStringBuilder;
     }
 
-    public String encryptMessage(Context context, String string) {
-        TinyDB tinyDB = new TinyDB(context);
+    public String encryptMessage(String string, String key) {
+
         EncryptUtils encryptUtils = new EncryptUtils();
 
-        return encryptUtils.encrypt(string, tinyDB.getString("encryptKey"));
+        return encryptUtils.encrypt(string, key);
     }
 
-    public String decryptMessage(Context context, String string) {
+    public String decryptMessage(String string, String key) {
 
-        TinyDB tinyDB = new TinyDB(context);
         EncryptUtils encryptUtils = new EncryptUtils();
 
-        return encryptUtils.decrypt(string, tinyDB.getString("encryptKey"));
+        return encryptUtils.decrypt(string, key);
     }
 }

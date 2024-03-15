@@ -11,7 +11,7 @@
         tools:ignore="HardcodedText" />
 
     <item
-        android:title="Database..."
+        android:title="Database"
         tools:ignore="HardcodedText">
         <menu>
             <item
@@ -46,7 +46,7 @@
     </item>
 
     <item
-        android:title="Notifications..."
+        android:title="Notifications"
         tools:ignore="HardcodedText">
         <menu>
             <item
@@ -72,6 +72,16 @@
             <item
                 android:id="@+id/removeAppLock"
                 android:title="Remove App Lock" />
+        </menu>
+    </item>
+
+    <item
+        android:title="Misc"
+        tools:ignore="HardcodedText">
+        <menu>
+            <item
+                android:id="@+id/hideDecryptError"
+                android:title="Hide/Show Decrypt Errors" />
         </menu>
     </item>
 
