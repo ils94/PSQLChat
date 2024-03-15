@@ -104,7 +104,7 @@ public class dbQueries {
 
                         String messageDecrypted = decryptMessage(activity, user_message);
 
-                        if (messageDecrypted.contains(string)) {
+                        if (messageDecrypted.toLowerCase().contains(string.toLowerCase()) || user_name.toLowerCase().contains(string.toLowerCase())) {
 
                             chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, messageDecrypted)).append("\n");
                         }
