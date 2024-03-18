@@ -16,6 +16,8 @@ import com.google.zxing.common.BitMatrix;
 
 public class QrCodeActivity extends AppCompatActivity {
 
+    String intentString;
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,17 +25,25 @@ public class QrCodeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qr_code);
 
         Intent intent = getIntent();
-        String dbCredentials = intent.getStringExtra("dbCredentials");
 
-        assert dbCredentials != null;
-        String [] contents = dbCredentials.split("/");
+        String dbCredentials = intent.getStringExtra("dbCredentials");
+        String encryptKey = intent.getStringExtra("encryptKey");
+
+        if (dbCredentials != null) {
+
+            String[] contents = dbCredentials.split("/");
+            setTitle(contents[0]);
+            intentString = dbCredentials;
+        } else if (encryptKey != null) {
+
+            intentString = encryptKey;
+            setTitle("Encrypt Key");
+        }
 
         ImageView imageView = findViewById(R.id.imageView);
 
-        setTitle(contents[0]);
-
         try {
-            Bitmap bitmap = generateQRCode(dbCredentials);
+            Bitmap bitmap = generateQRCode(intentString);
             imageView.setImageBitmap(bitmap);
         } catch (WriterException e) {
             Toast.makeText(this, "Error generating QR code", Toast.LENGTH_SHORT).show();

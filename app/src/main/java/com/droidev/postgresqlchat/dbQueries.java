@@ -267,7 +267,18 @@ public class dbQueries {
 
         TinyDB tinyDB = new TinyDB(activity);
 
-        String sql = "SELECT * FROM CHAT ORDER BY ID ASC LIMIT 1000";
+        String rows = tinyDB.getString("rows");
+
+        String sql;
+
+        if (!rows.isEmpty()) {
+
+            sql = "SELECT * FROM CHAT ORDER BY ID ASC LIMIT " + rows;
+
+        } else {
+
+            sql = "SELECT * FROM CHAT ORDER BY ID ASC LIMIT 1000";
+        }
 
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(sql);

@@ -211,8 +211,6 @@ public class AddCredentialsActivity extends AppCompatActivity {
 
                 String scannedResult = result.getContents();
 
-                Toast.makeText(this, "Scanned: " + scannedResult, Toast.LENGTH_SHORT).show();
-
                 String[] contents = scannedResult.split("/");
 
                 identifyNameEditText.setText(contents[0]);

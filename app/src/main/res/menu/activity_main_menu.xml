@@ -82,6 +82,9 @@
             <item
                 android:id="@+id/hideDecryptError"
                 android:title="Hide/Show Decrypt Errors" />
+            <item
+                android:id="@+id/changeRows"
+                android:title="Change DB SELECT ROWS" />
         </menu>
     </item>
 

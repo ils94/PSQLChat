@@ -259,6 +259,12 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
 
+            case R.id.changeRows:
+
+                numberOfRows();
+
+                break;
+
             case R.id.uploadImage:
 
                 String permission_notification = Manifest.permission.READ_MEDIA_IMAGES;
@@ -724,5 +730,47 @@ public class MainActivity extends AppCompatActivity {
                 + "/" + tinyDB.getString("dbHost")
                 + "/" + tinyDB.getString("dbPort")
                 + "/" + tinyDB.getString("encryptKey");
+    }
+
+    public void numberOfRows() {
+
+        EditText rowsEditText = new EditText(this);
+        rowsEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        rowsEditText.setHint("");
+        rowsEditText.setMaxLines(1);
+
+        LinearLayout lay = new LinearLayout(this);
+        lay.setOrientation(LinearLayout.VERTICAL);
+        lay.addView(rowsEditText);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setTitle("DB SELECT ROWS")
+                .setPositiveButton("Ok", null)
+                .setNegativeButton("Cancel", null)
+                .setView(lay)
+                .show();
+
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+        positiveButton.setOnClickListener(v -> {
+
+            String rows = rowsEditText.getText().toString();
+
+            if (!rows.isEmpty()) {
+
+                tinyDB.remove("rows");
+
+                tinyDB.putString("rows", rows);
+
+                Toast.makeText(this, "SELECT ROWS change to: " + rows, Toast.LENGTH_SHORT).show();
+
+                dialog.dismiss();
+            } else {
+
+                Toast.makeText(this, "Field cannot be empty.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

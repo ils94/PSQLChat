@@ -13,6 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import java.util.ArrayList;
 
 public class DisplayDetailsActivity extends AppCompatActivity {
@@ -203,18 +206,13 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 
             case R.id.qrCode:
 
-                String dbCredentials = identifyNameEditText.getText().toString()
-                        + "/" + dbNameEditText.getText().toString()
-                        + "/" + dbUserEditText.getText().toString()
-                        + "/" + dbPassEditText.getText().toString()
-                        + "/" + dbHostEditText.getText().toString()
-                        + "/" + dbPortEditText.getText().toString()
-                        + "/" + dbEncryptKeyEditText.getText().toString();
+                generateQRCode();
 
-                Intent intent3 = new Intent(DisplayDetailsActivity.this, QrCodeActivity.class);
-                intent3.putExtra("dbCredentials", dbCredentials);
-                startActivity(intent3);
-                DisplayDetailsActivity.this.finish();
+                break;
+
+            case R.id.scanNewKey:
+
+                startQRCodeScanner();
 
                 break;
         }
@@ -244,7 +242,6 @@ public class DisplayDetailsActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Do you want to generate a new Encryption Key? You will lose your current Key permanently, and won't be able to Decrypt messages that were Encrypted with that Key.");
             builder.setPositiveButton("Yes", (dialog, id) -> dbEncryptKeyEditText.setText(key));
-
             builder.setNegativeButton("No", (dialog, id) -> dialog.cancel());
 
             AlertDialog dialog = builder.create();
@@ -253,5 +250,79 @@ public class DisplayDetailsActivity extends AppCompatActivity {
 
             dbEncryptKeyEditText.setText(key);
         }
+    }
+
+    private void startQRCodeScanner() {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setOrientationLocked(true);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+        integrator.setPrompt("Scan the Encrypt Key QR Code");
+        integrator.initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+
+                String scannedResult = result.getContents();
+
+                dbEncryptKeyEditText.setText(scannedResult);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public void generateQRCode() {
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setTitle("Which QR Code to generate:")
+                .setPositiveButton("Credentials", null)
+                .setNegativeButton("Encrypt Key", null)
+                .setNeutralButton("Cancel", null)
+                .show();
+
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        Button neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+
+        positiveButton.setOnClickListener(view -> {
+
+            String dbCredentials = identifyNameEditText.getText().toString()
+                    + "/" + dbNameEditText.getText().toString()
+                    + "/" + dbUserEditText.getText().toString()
+                    + "/" + dbPassEditText.getText().toString()
+                    + "/" + dbHostEditText.getText().toString()
+                    + "/" + dbPortEditText.getText().toString()
+                    + "/" + dbEncryptKeyEditText.getText().toString();
+
+            Intent intent3 = new Intent(DisplayDetailsActivity.this, QrCodeActivity.class);
+            intent3.putExtra("dbCredentials", dbCredentials);
+            startActivity(intent3);
+            DisplayDetailsActivity.this.finish();
+
+            dialog.dismiss();
+        });
+
+        negativeButton.setOnClickListener(view -> {
+
+            String encryptKey = dbEncryptKeyEditText.getText().toString();
+
+            Intent intent3 = new Intent(DisplayDetailsActivity.this, QrCodeActivity.class);
+            intent3.putExtra("encryptKey", encryptKey);
+            startActivity(intent3);
+            DisplayDetailsActivity.this.finish();
+
+            dialog.dismiss();
+        });
+
+        neutralButton.setOnClickListener(view -> dialog.cancel());
     }
 }
