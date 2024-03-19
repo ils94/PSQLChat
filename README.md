@@ -45,7 +45,7 @@ No web server is necessary; just create a PostgreSQL database, host it somewhere
 
 create table if not exists chat (id serial primary key, user_name varchar(10) not null, user_message varchar not null)
 
-*By default, only the last 1000 rows will be displayed. The reason is that as the database grows, selecting and displaying more rows in the client may decrease performance over time. You can alter how many rows will be selected in your app in the **Menu - Miscs.***
+By default, only the last 1000 rows will be displayed. The reason is that as the database grows, selecting and displaying more rows in the client may decrease performance over time. You can alter how many rows will be selected in your app in the **Menu - Miscs.**
 
 ---
 
