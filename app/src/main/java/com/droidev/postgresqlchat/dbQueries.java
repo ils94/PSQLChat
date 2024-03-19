@@ -19,6 +19,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class dbQueries {
 
@@ -273,11 +276,11 @@ public class dbQueries {
 
         if (!rows.isEmpty()) {
 
-            sql = "SELECT * FROM CHAT ORDER BY ID ASC LIMIT " + rows;
+            sql = "SELECT * FROM CHAT ORDER BY ID DESC LIMIT " + rows;
 
         } else {
 
-            sql = "SELECT * FROM CHAT ORDER BY ID ASC LIMIT 1000";
+            sql = "SELECT * FROM CHAT ORDER BY ID DESC LIMIT 1000";
         }
 
         Statement stmt = connection.createStatement();
@@ -285,20 +288,24 @@ public class dbQueries {
 
         SpannableStringBuilder chatBuilder = new SpannableStringBuilder();
 
+        List<CharSequence> messages = new ArrayList<>();
+
         while (rs.next()) {
             String user_name = rs.getString("USER_NAME");
             String user_message = rs.getString("USER_MESSAGE");
-
             String messageDecrypted = decryptMessage(user_message, tinyDB.getString("encryptKey"));
 
             if (!tinyDB.getString("hideError").equals("ON")) {
-
-                chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, messageDecrypted)).append("\n");
-
+                messages.add(textStylized(activity.getApplicationContext(), user_name, messageDecrypted));
             } else if (tinyDB.getString("hideError").equals("ON") && !messageDecrypted.equals("Can't decrypt message, wrong key.")) {
-
-                chatBuilder.append(textStylized(activity.getApplicationContext(), user_name, messageDecrypted)).append("\n");
+                messages.add(textStylized(activity.getApplicationContext(), user_name, messageDecrypted));
             }
+        }
+
+        Collections.reverse(messages);
+
+        for (CharSequence message : messages) {
+            chatBuilder.append(message).append("\n");
         }
 
         rs.close();
@@ -306,6 +313,7 @@ public class dbQueries {
 
         activity.runOnUiThread(() -> {
             Spanned spannedText = SpannableStringBuilder.valueOf(chatBuilder);
+
             textView.setText(spannedText);
 
             if (autoScroll) {
