@@ -58,7 +58,7 @@ Once you acquire your API Key, paste and save it: **Menu - APIs - Imgur API Key*
 ---
 # Message Encryptation/Decryptation
 
-Before inserting a message into the database, you must possess an encryption key. You can generate one when saving a new database, but it is crucial that everyone in the chat has this key. Otherwise, you won't be able to decrypt each other's messages.
+Before inserting a message into the database, you must possess an encryption key. You can generate one when saving a new database, but it is crucial that everyone in the chat has this key (the person/people you want to chat with). Otherwise, you won't be able to decrypt each other's messages.
 
 This feature provides a basic encryption/decryption mechanism to ensure the security of messages stored in the database, protecting them from unauthorized access.
 
