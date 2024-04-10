@@ -58,7 +58,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
 
         if (link != null) {
 
-            String[] linkArray = link.split("/");
+            String[] linkArray = link.split("@@");
 
             if (linkArray.length == 6) {
 
@@ -104,7 +104,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
         }
 
         for (String savedDB : savedDBs) {
-            String[] credentials = savedDB.split("\\|");
+            String[] credentials = savedDB.split("@@");
 
             if (credentials[0].equals(identifyName)) {
 
@@ -114,8 +114,8 @@ public class AddCredentialsActivity extends AppCompatActivity {
             }
         }
 
-        String credentialsDB = identifyName + "|" + userName + "|" + dbName + "|" +
-                dbUser + "|" + dbPass + "|" + dbHost + "|" + dbPort + "|" + encryptKey;
+        String credentialsDB = identifyName + "@@" + userName + "@@" + dbName + "@@" +
+                dbUser + "@@" + dbPass + "@@" + dbHost + "@@" + dbPort + "@@" + encryptKey;
 
         savedDBs.add(credentialsDB);
 
@@ -211,7 +211,7 @@ public class AddCredentialsActivity extends AppCompatActivity {
 
                 String scannedResult = result.getContents();
 
-                String[] contents = scannedResult.split("/");
+                String[] contents = scannedResult.split("@@");
 
                 identifyNameEditText.setText(contents[0]);
                 editTextDbName.setText(contents[1]);

@@ -79,13 +79,13 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         dbEncryptKeyEditText.setText(dbEncryptKey);
 
         current = (identifyNameEditText.getText().toString()
-                + "|" + userNameEditText.getText().toString()
-                + "|" + dbNameEditText.getText().toString()
-                + "|" + dbUserEditText.getText().toString()
-                + "|" + dbPassEditText.getText().toString()
-                + "|" + dbHostEditText.getText().toString()
-                + "|" + dbPortEditText.getText().toString()
-                + "|" + dbEncryptKeyEditText.getText().toString());
+                + "@@" + userNameEditText.getText().toString()
+                + "@@" + dbNameEditText.getText().toString()
+                + "@@" + dbUserEditText.getText().toString()
+                + "@@" + dbPassEditText.getText().toString()
+                + "@@" + dbHostEditText.getText().toString()
+                + "@@" + dbPortEditText.getText().toString()
+                + "@@" + dbEncryptKeyEditText.getText().toString());
 
         connectButton.setOnClickListener(view -> {
 
@@ -164,7 +164,7 @@ public class DisplayDetailsActivity extends AppCompatActivity {
                 }
             }
 
-            String newValue = identifyName + "|" + userName + "|" + dbName + "|" + dbUser + "|" + dbPass + "|" + dbHost + "|" + dbPort + "|" + encryptKey;
+            String newValue = identifyName + "@@" + userName + "@@" + dbName + "@@" + dbUser + "@@" + dbPass + "@@" + dbHost + "@@" + dbPort + "@@" + encryptKey;
 
             int index = savedDBs.indexOf(current);
 
@@ -296,12 +296,12 @@ public class DisplayDetailsActivity extends AppCompatActivity {
         positiveButton.setOnClickListener(view -> {
 
             String dbCredentials = identifyNameEditText.getText().toString()
-                    + "/" + dbNameEditText.getText().toString()
-                    + "/" + dbUserEditText.getText().toString()
-                    + "/" + dbPassEditText.getText().toString()
-                    + "/" + dbHostEditText.getText().toString()
-                    + "/" + dbPortEditText.getText().toString()
-                    + "/" + dbEncryptKeyEditText.getText().toString();
+                    + "@@" + dbNameEditText.getText().toString()
+                    + "@@" + dbUserEditText.getText().toString()
+                    + "@@" + dbPassEditText.getText().toString()
+                    + "@@" + dbHostEditText.getText().toString()
+                    + "@@" + dbPortEditText.getText().toString()
+                    + "@@" + dbEncryptKeyEditText.getText().toString();
 
             Intent intent3 = new Intent(DisplayDetailsActivity.this, QrCodeActivity.class);
             intent3.putExtra("dbCredentials", dbCredentials);

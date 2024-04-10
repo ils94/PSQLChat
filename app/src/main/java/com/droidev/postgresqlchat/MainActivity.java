@@ -715,21 +715,21 @@ public class MainActivity extends AppCompatActivity {
 
         link = "https://psqlchat.go/"
                 + tinyDB.getString("dbName")
-                + "/" + tinyDB.getString("dbUser")
-                + "/" + tinyDB.getString("dbPass")
-                + "/" + tinyDB.getString("dbHost")
-                + "/" + tinyDB.getString("dbPort");
+                + "@@" + tinyDB.getString("dbUser")
+                + "@@" + tinyDB.getString("dbPass")
+                + "@@" + tinyDB.getString("dbHost")
+                + "@@" + tinyDB.getString("dbPort");
     }
 
     public void linkWithKey() {
 
         link = "https://psqlchat.go/"
                 + tinyDB.getString("dbName")
-                + "/" + tinyDB.getString("dbUser")
-                + "/" + tinyDB.getString("dbPass")
-                + "/" + tinyDB.getString("dbHost")
-                + "/" + tinyDB.getString("dbPort")
-                + "/" + tinyDB.getString("encryptKey");
+                + "@@" + tinyDB.getString("dbUser")
+                + "@@" + tinyDB.getString("dbPass")
+                + "@@" + tinyDB.getString("dbHost")
+                + "@@" + tinyDB.getString("dbPort")
+                + "@@" + tinyDB.getString("encryptKey");
     }
 
     public void numberOfRows() {

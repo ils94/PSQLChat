@@ -34,7 +34,7 @@ public class DisplayDBsActivity extends AppCompatActivity {
         databaseDetailsList = new ArrayList<>();
 
         for (String savedDB : savedDBs) {
-            String[] detailsArray = savedDB.split("\\|");
+            String[] detailsArray = savedDB.split("@@");
             if (detailsArray.length >= 8) {
                 DatabaseDetails databaseDetails = new DatabaseDetails(
                         detailsArray[0], detailsArray[1], detailsArray[2],
@@ -79,10 +79,10 @@ public class DisplayDBsActivity extends AppCompatActivity {
     }
 
     private void updateTinyDB(ArrayList<String> savedDBs, DatabaseDetails removedItem) {
-        savedDBs.remove(removedItem.getIdentifyName() + "|" + removedItem.getUsername() + "|" +
-                removedItem.getDbName() + "|" + removedItem.getDbUser() + "|" +
-                removedItem.getDbPass() + "|" + removedItem.getDbHost() + "|"
-                + removedItem.getDbPort() + "|" + removedItem.getDbEcryptKey());
+        savedDBs.remove(removedItem.getIdentifyName() + "@@" + removedItem.getUsername() + "@@" +
+                removedItem.getDbName() + "@@" + removedItem.getDbUser() + "@@" +
+                removedItem.getDbPass() + "@@" + removedItem.getDbHost() + "@@"
+                + removedItem.getDbPort() + "@@" + removedItem.getDbEcryptKey());
 
         tinyDB.putListString("savedDBs", savedDBs);
 
