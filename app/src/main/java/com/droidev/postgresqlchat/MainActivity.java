@@ -310,7 +310,12 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             public void run() {
                 if (isAppRunning) {
-                    loadChat();
+
+                    if (autoScroll) {
+
+                        loadChat();
+                    }
+
                     handler.postDelayed(this, delay);
                 }
             }
@@ -322,6 +327,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
         isAppRunning = false;
+
         chat.setText("");
     }
 
@@ -346,6 +352,7 @@ public class MainActivity extends AppCompatActivity {
         if (!unlocked) {
 
             lockApp.dismissLoginDialog();
+
             checkPassword();
         } else {
 
@@ -461,6 +468,8 @@ public class MainActivity extends AppCompatActivity {
             autoScroll = false;
 
             menuItem.findItem(R.id.pauseResumeChatLoop).setIcon(R.drawable.play);
+
+            chat.setTextIsSelectable(true);
         } else {
 
             Toast.makeText(MainActivity.this, "Chat loop resumed.", Toast.LENGTH_SHORT).show();
@@ -468,6 +477,8 @@ public class MainActivity extends AppCompatActivity {
             autoScroll = true;
 
             menuItem.findItem(R.id.pauseResumeChatLoop).setIcon(R.drawable.pause);
+
+            chat.setTextIsSelectable(false);
         }
     }
 
@@ -481,7 +492,6 @@ public class MainActivity extends AppCompatActivity {
 
             menuItem.findItem(R.id.pauseResumeChatLoop).setIcon(R.drawable.pause);
         }
-
     }
 
     @SuppressLint("ScheduleExactAlarm")
@@ -605,7 +615,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == 3) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //restartBackgroundService();
+
                 msgStartAlarm();
             } else {
                 Toast.makeText(this, "Allow notifications first.", Toast.LENGTH_SHORT).show();
