@@ -31,7 +31,7 @@ public class QrCodeActivity extends AppCompatActivity {
 
         if (dbCredentials != null) {
 
-            String[] contents = dbCredentials.split("/");
+            String[] contents = dbCredentials.split("@@");
             setTitle(contents[0]);
             intentString = dbCredentials;
         } else if (encryptKey != null) {

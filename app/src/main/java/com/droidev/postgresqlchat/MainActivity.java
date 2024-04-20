@@ -208,8 +208,6 @@ public class MainActivity extends AppCompatActivity {
                     msgStartAlarm();
                 }
 
-                Toast.makeText(this, "Notificações ativadas.", Toast.LENGTH_SHORT).show();
-
                 break;
 
             case R.id.notificationsOFF:
@@ -504,6 +502,8 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_MUTABLE);
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, 5000, pendingIntent);
+
+        Toast.makeText(this, "Notificações ativadas.", Toast.LENGTH_SHORT).show();
     }
 
     private void msgCancelAlarm() {
