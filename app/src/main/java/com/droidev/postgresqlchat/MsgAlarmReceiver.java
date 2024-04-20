@@ -1,6 +1,8 @@
 package com.droidev.postgresqlchat;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -56,5 +58,27 @@ public class MsgAlarmReceiver extends BroadcastReceiver {
                 }
             });
         }
+
+        msgStartAlarm(context);
+    }
+
+    @SuppressLint("ScheduleExactAlarm")
+    private void msgStartAlarm(Context context) {
+
+        msgCancelAlarm(context);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, MsgAlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_MUTABLE);
+
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, 5000, pendingIntent);
+    }
+
+    private void msgCancelAlarm(Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, MsgAlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_MUTABLE);
+
+        alarmManager.cancel(pendingIntent);
     }
 }

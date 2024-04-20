@@ -8,10 +8,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:name=".MyApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -23,8 +25,8 @@
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
-            tools:replace="android:screenOrientation"
-            android:stateNotNeeded="true"/>
+            android:stateNotNeeded="true"
+            tools:replace="android:screenOrientation" />
         <activity
             android:name=".QrCodeActivity"
             android:exported="false" />
@@ -57,8 +59,6 @@
                 android:value="" />
         </activity>
 
-        <service android:name=".MyBackgroundService" />
-
         <activity
             android:name=".ShowAllMessagesActivity"
             android:exported="false" />
@@ -84,6 +84,7 @@
                 <data android:host="psqlchat.imgur.com" />
             </intent-filter>
         </activity>
+
         <receiver android:name=".MsgAlarmReceiver" />
     </application>
 

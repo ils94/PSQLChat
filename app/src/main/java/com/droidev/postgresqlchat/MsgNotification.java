@@ -17,6 +17,7 @@ public class MsgNotification {
                 "PSQLChat Channel",
                 NotificationManager.IMPORTANCE_DEFAULT
         );
+
         notificationManager.createNotificationChannel(channel);
 
         Intent intent = new Intent(context, MainActivity.class);

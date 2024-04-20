@@ -201,30 +201,22 @@ public class MainActivity extends AppCompatActivity {
                         ActivityCompat.requestPermissions(this, new String[]{permission_storage}, 3);
                     } else {
 
-                        //restartBackgroundService();
-
-                        //Toast.makeText(this, "Notifications ON.", Toast.LENGTH_SHORT).show();
-
                         msgStartAlarm();
                     }
                 } else {
 
-                    //restartBackgroundService();
-
-                    //Toast.makeText(this, "Notifications ON.", Toast.LENGTH_SHORT).show();
-
                     msgStartAlarm();
                 }
+
+                Toast.makeText(this, "Notificações ativadas.", Toast.LENGTH_SHORT).show();
 
                 break;
 
             case R.id.notificationsOFF:
 
-                //stopBackgroundService();
-
-                //Toast.makeText(this, "Notifications OFF.", Toast.LENGTH_SHORT).show();
-
                 msgCancelAlarm();
+
+                Toast.makeText(this, "Notificações desativadas.", Toast.LENGTH_SHORT).show();
 
                 break;
 
@@ -492,23 +484,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    private void startBackgroundService() {
-//        Intent serviceIntent = new Intent(this, MyBackgroundService.class);
-//
-//        startForegroundService(serviceIntent);
-//    }
-//
-//    private void stopBackgroundService() {
-//        Intent serviceIntent = new Intent(this, MyBackgroundService.class);
-//        stopService(serviceIntent);
-//    }
-//
-//    public void restartBackgroundService() {
-//        stopBackgroundService();
-//
-//        startBackgroundService();
-//    }
-
+    @SuppressLint("ScheduleExactAlarm")
     private void msgStartAlarm() {
 
         msgCancelAlarm();
@@ -517,11 +493,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MsgAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_MUTABLE);
 
-        long interval = 3000;
-        long startTime = System.currentTimeMillis();
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, startTime, interval, pendingIntent);
-
-        Toast.makeText(this, "Notificações ativadas.", Toast.LENGTH_SHORT).show();
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, 5000, pendingIntent);
     }
 
     private void msgCancelAlarm() {
