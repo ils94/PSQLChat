@@ -84,6 +84,7 @@
                 <data android:host="psqlchat.imgur.com" />
             </intent-filter>
         </activity>
+        <receiver android:name=".MsgAlarmReceiver" />
     </application>
 
 </manifest>
