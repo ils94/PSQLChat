@@ -27,6 +27,7 @@ public class MsgNotification {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "psqlchat_channel")
                 .setContentTitle(title)
                 .setContentText(msgs)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
