@@ -94,29 +94,37 @@ public class MainActivity extends AppCompatActivity {
         String action = getIntent().getAction();
 
         if (Intent.ACTION_SEND.equals(action)) {
+
             handleSendIntent(getIntent());
         } else if (Intent.ACTION_VIEW.equals(action)) {
+
             handleViewIntent(getIntent());
         }
     }
 
     private void handleSendIntent(Intent intent) {
+
         String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+
         if (sharedText != null) {
+
             textToSend.setText(sharedText);
         }
     }
 
     private void handleViewIntent(Intent intent) {
         Uri uri = intent.getData();
+
         if (uri != null) {
+
             String path = uri.toString();
+
             if (path.contains("psqlchat.go")) {
+
                 Intent newIntent = new Intent(MainActivity.this, AddCredentialsActivity.class);
                 newIntent.putExtra("link", path.replace("https://psqlchat.go/", ""));
                 startActivity(newIntent);
-            } else {
-                textToSend.setText(uri.toString());
+
             }
         }
     }
@@ -583,7 +591,7 @@ public class MainActivity extends AppCompatActivity {
 
                 ImgurUploader.uploadImage(this, Uri.parse(imagePath), imageUrl -> {
                     if (imageUrl != null) {
-                        prepareToSendText(imageUrl.replace("i.imgur.com", "psqlchat.imgur.com"));
+                        prepareToSendText(imageUrl);
                     }
                 });
             });
