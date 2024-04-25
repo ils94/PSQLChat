@@ -20,22 +20,15 @@ No web server is necessary; just create a PostgreSQL database, host it somewhere
 
 # Features
 
-- Send and store messages in a database.
-- Retrieve messages from the database and display them.
-- Easily send images using the Imgur API.
-- Open Imgur images within the app.
-- Save your own Imgur API Key.
-- Pause/Resume Chat loop to see all chat messages.
-- Show all database messages and allow searching within the database.
-- Turn on notifications and receive the last 10 messages sent to the database (may vary depending on the phone).
-- Share the database link for easier login.
-- Generate a QR Code for an easier and secure way to share database credentials.
-- Save multiple databases to quickly switch between them.
-- Edit saved databases.
-- Adjust font size.
-- Message Encryptation and Decryptation using AES-256.
-- Able to setup a password to lock the app's chat.
-- Filter out the Decrypt errors from the chat (in case you are in a database where others have different encrypt keys).
+- Store and retrieve messages in the database;
+- Easily send images using the Imgur API (needs to save API Key);
+- Search for messages in the database;
+- Turn on/off notifications;
+- Share the database credentials (QR Code or Intent Share);
+- Save multiple databases to quickly switch between them;
+- Adjust font size;
+- Message Encryptation and Decryptation using AES-256;
+- Able to setup a password to lock the app.
 
 ---
 
