@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
 
                 msgCancelAlarm();
 
-                Toast.makeText(this, "Notificações desativadas.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Notifications disabled.", Toast.LENGTH_SHORT).show();
 
                 break;
 
@@ -509,7 +509,7 @@ public class MainActivity extends AppCompatActivity {
 
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, 5000, pendingIntent);
 
-        Toast.makeText(this, "Notificações ativadas.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Notifications enabled.", Toast.LENGTH_SHORT).show();
     }
 
     private void msgCancelAlarm() {
