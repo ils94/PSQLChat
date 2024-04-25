@@ -124,8 +124,18 @@ public class MainActivity extends AppCompatActivity {
                 Intent newIntent = new Intent(MainActivity.this, AddCredentialsActivity.class);
                 newIntent.putExtra("link", path.replace("https://psqlchat.go/", ""));
                 startActivity(newIntent);
-
             }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        String action = intent.getAction();
+
+        if (Intent.ACTION_SEND.equals(action)) {
+            handleSendIntent(intent);
         }
     }
 
