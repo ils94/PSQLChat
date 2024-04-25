@@ -67,28 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        Uri uri = getIntent().getData();
-
-        if (uri != null) {
-
-            String path = uri.toString();
-
-            if (path.contains("psqlchat.go")) {
-
-                Intent intent = new Intent(MainActivity.this, AddCredentialsActivity.class);
-                intent.putExtra("link", path.replace("https://psqlchat.go/", ""));
-                startActivity(intent);
-
-            }
-
-            if (path.contains("psqlchat.imgur.com")) {
-
-                openWebView(path.replace("psqlchat.imgur.com", "i.imgur.com"));
-
-                MainActivity.this.finish();
-            }
-        }
-
         tinyDB = new TinyDB(this);
 
         lockApp = new LockApp();
@@ -111,6 +89,35 @@ public class MainActivity extends AppCompatActivity {
         if (!tinyDB.getString("textSize").isEmpty()) {
 
             chat.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(tinyDB.getString("textSize")));
+        }
+
+        String action = getIntent().getAction();
+
+        if (Intent.ACTION_SEND.equals(action)) {
+            handleSendIntent(getIntent());
+        } else if (Intent.ACTION_VIEW.equals(action)) {
+            handleViewIntent(getIntent());
+        }
+    }
+
+    private void handleSendIntent(Intent intent) {
+        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (sharedText != null) {
+            textToSend.setText(sharedText);
+        }
+    }
+
+    private void handleViewIntent(Intent intent) {
+        Uri uri = intent.getData();
+        if (uri != null) {
+            String path = uri.toString();
+            if (path.contains("psqlchat.go")) {
+                Intent newIntent = new Intent(MainActivity.this, AddCredentialsActivity.class);
+                newIntent.putExtra("link", path.replace("https://psqlchat.go/", ""));
+                startActivity(newIntent);
+            } else {
+                textToSend.setText(uri.toString());
+            }
         }
     }
 
@@ -141,12 +148,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    private void openWebView(String url) {
-        Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra("url", url);
-        startActivity(intent);
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @SuppressLint("NonConstantResourceId")
